@@ -93,6 +93,8 @@ flutter:
     - assets/lottie_animations/
     - assets/rive_animations/
     - assets/pdfs/
+    - assets/database/ImageLinks.json
+
 
   
   # An image asset can refer to one or more resolution-specific "variants", see

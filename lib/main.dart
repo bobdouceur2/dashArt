@@ -1,11 +1,12 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-
+import 'dart:convert';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'flutter_flow/flutter_flow_theme.dart';
 import 'flutter_flow/flutter_flow_util.dart';
 import 'index.dart';
+import 'package:flutter/services.dart' show rootBundle;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -55,4 +56,10 @@ class _MyAppState extends State<MyApp> {
       navigatorObservers: [routeObserver],
     );
   }
+}
+  Future<List> loadJsonImageLouvres() async {
+    final jsonData = await rootBundle.loadString('assets/database/ImageLinks.json');
+    final Map<String, dynamic> imagesData = json.decode(jsonData);
+    final List imageUrls = imagesData.values.toList();
+    return imageUrls;
 }

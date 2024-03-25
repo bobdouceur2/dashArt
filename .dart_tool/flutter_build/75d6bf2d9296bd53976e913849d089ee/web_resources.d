@@ -1,0 +1,1 @@
+ build\\web\\favicon.png build\\web\\icons\\Icon-192.png build\\web\\icons\\Icon-512.png build\\web\\index.html:  C:\\Users\\thinn\\Desktop\\flutter\\dashArt\\web\\favicon.png C:\\Users\\thinn\\Desktop\\flutter\\dashArt\\web\\icons\\Icon-192.png C:\\Users\\thinn\\Desktop\\flutter\\dashArt\\web\\icons\\Icon-512.png C:\\Users\\thinn\\Desktop\\flutter\\dashArt\\web\\index.html

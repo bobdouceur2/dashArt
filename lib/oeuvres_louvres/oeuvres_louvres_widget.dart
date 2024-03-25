@@ -1,3 +1,4 @@
+import '/main.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
@@ -45,12 +46,12 @@ class _OeuvresLouvresWidgetState extends State<OeuvresLouvresWidget> {
           backgroundColor: FlutterFlowTheme.of(context).primary,
           automaticallyImplyLeading: false,
           title: Text(
-            'Page Title',
+            "Galerie d'oeuvres",
             style: FlutterFlowTheme.of(context).headlineMedium.override(
-                  fontFamily: 'Poppins',
-                  color: Colors.white,
-                  fontSize: 22.0,
-                ),
+              fontFamily: 'Poppins',
+              color: Colors.white,
+              fontSize: 22.0,
+            ),
           ),
           actions: [],
           centerTitle: false,
@@ -60,10 +61,75 @@ class _OeuvresLouvresWidgetState extends State<OeuvresLouvresWidget> {
           top: true,
           child: Column(
             mainAxisSize: MainAxisSize.max,
-            children: [],
+            children: [
+              Expanded(
+                child: FutureBuilder(
+                  future: loadJsonImageLouvres(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    } else if (snapshot.hasError) {
+                      return Center(
+                        child: Text('Error loading data: ${snapshot.error}'),
+                      );
+                    } else {
+                      final List<String>? imageUrls = snapshot.data?.cast<String>();
+                      return Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                        child: GridView.builder(
+                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3,
+                            crossAxisSpacing: 16,
+                            mainAxisSpacing: 16,
+                          ),
+                          itemCount: imageUrls?.length,
+                          itemBuilder: (context, index) {
+                            return GestureDetector(
+                              onTap: () {
+                                _showImageDialog(context, imageUrls![index]);
+                              },
+                              child: Image.network(
+                                imageUrls![index],
+                                fit: BoxFit.cover,
+                              ),
+                            );
+                          },
+                        ),
+                      );
+                    }
+                  },
+                ),
+              ),
+            ],
           ),
         ),
       ),
+    );
+  }
+
+  void _showImageDialog(BuildContext context, String imageUrl) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Color(0xFF212222), // Utiliser la couleur de fond neutre
+          insetPadding: EdgeInsets.all(0), // Supprimer les marges internes
+          child: GestureDetector(
+            onTap: () {
+              Navigator.of(context).pop(); // Fermer le dialogue lorsqu'on clique sur l'image
+            },
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(15),
+              child: Image.network(
+                imageUrl,
+                fit: BoxFit.contain, // Afficher l'image au complet
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }
