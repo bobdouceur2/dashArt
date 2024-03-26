@@ -1,15 +1,33 @@
+import 'dart:convert';
+import 'dart:io';
+
 import '/main.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'oeuvres_louvres_model.dart';
 export 'oeuvres_louvres_model.dart';
+import 'package:flutter/services.dart' show rootBundle;
+
+
+class LouvresData {
+  static Map<String, List<int>> clickCounts = {};
+
+  static void recordClick(String nom) {
+    final timestamp = DateTime.now().millisecondsSinceEpoch;
+    clickCounts.putIfAbsent(nom, () => []);
+    clickCounts[nom]!.add(timestamp);
+    print('Nombre de clics pour "$nom" : ${clickCounts[nom]!.length}');
+    // Vous pouvez ajouter ici le code pour sauvegarder les clics dans un fichier ou une base de données si nécessaire.
+  }
+}
 
 class OeuvresLouvresWidget extends StatefulWidget {
-  const OeuvresLouvresWidget({super.key});
+  const OeuvresLouvresWidget({Key? key}) : super(key: key);
 
   @override
   State<OeuvresLouvresWidget> createState() => _OeuvresLouvresWidgetState();
@@ -36,18 +54,26 @@ class _OeuvresLouvresWidgetState extends State<OeuvresLouvresWidget> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => _model.unfocusNode.canRequestFocus
+      onTap: () =>
+      _model.unfocusNode.canRequestFocus
           ? FocusScope.of(context).requestFocus(_model.unfocusNode)
           : FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+        backgroundColor: FlutterFlowTheme
+            .of(context)
+            .primaryBackground,
         appBar: AppBar(
-          backgroundColor: FlutterFlowTheme.of(context).primary,
+          backgroundColor: FlutterFlowTheme
+              .of(context)
+              .primary,
           automaticallyImplyLeading: false,
           title: Text(
             "Galerie d'oeuvres",
-            style: FlutterFlowTheme.of(context).headlineMedium.override(
+            style: FlutterFlowTheme
+                .of(context)
+                .headlineMedium
+                .override(
               fontFamily: 'Poppins',
               color: Colors.white,
               fontSize: 22.0,
@@ -72,14 +98,21 @@ class _OeuvresLouvresWidgetState extends State<OeuvresLouvresWidget> {
                       );
                     } else if (snapshot.hasError) {
                       return Center(
-                        child: Text('Error loading data: ${snapshot.error}'),
+                        child:
+                        Text('Error loading data: ${snapshot.error}'),
                       );
                     } else {
-                      final List<String>? imageUrls = snapshot.data?.cast<String>();
+                      final Map<String, dynamic>? imagesData = snapshot.data;
+                      final List<String> imageUrls = imagesData?.values.cast<String>().toList() ?? [];
+                      final List<String> imageName = imagesData?.keys.cast<String>().toList() ?? [];
+
+                      //print(snapshot);
                       return Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 16),
                         child: GridView.builder(
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          gridDelegate:
+                          SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 3,
                             crossAxisSpacing: 16,
                             mainAxisSpacing: 16,
@@ -88,7 +121,12 @@ class _OeuvresLouvresWidgetState extends State<OeuvresLouvresWidget> {
                           itemBuilder: (context, index) {
                             return GestureDetector(
                               onTap: () {
+                                //_incrementCounter(artworks![index]);
                                 _showImageDialog(context, imageUrls![index]);
+                                //LouvresData.recordClick();
+                                print(imageName[index]);
+                                LouvresData.recordClick(imageName[index]);
+
                               },
                               child: Image.network(
                                 imageUrls![index],
@@ -114,17 +152,17 @@ class _OeuvresLouvresWidgetState extends State<OeuvresLouvresWidget> {
       context: context,
       builder: (BuildContext context) {
         return Dialog(
-          backgroundColor: Color(0xFF212222), // Utiliser la couleur de fond neutre
-          insetPadding: EdgeInsets.all(0), // Supprimer les marges internes
+          backgroundColor: Color(0xFF212222),
+          insetPadding: EdgeInsets.all(0),
           child: GestureDetector(
             onTap: () {
-              Navigator.of(context).pop(); // Fermer le dialogue lorsqu'on clique sur l'image
+              Navigator.of(context).pop();
             },
             child: ClipRRect(
               borderRadius: BorderRadius.circular(15),
               child: Image.network(
                 imageUrl,
-                fit: BoxFit.contain, // Afficher l'image au complet
+                fit: BoxFit.contain,
               ),
             ),
           ),
@@ -132,4 +170,11 @@ class _OeuvresLouvresWidgetState extends State<OeuvresLouvresWidget> {
       },
     );
   }
+
+
+
+
+
+
+
 }

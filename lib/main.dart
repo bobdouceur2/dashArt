@@ -8,6 +8,8 @@ import 'flutter_flow/flutter_flow_util.dart';
 import 'index.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
+import 'oeuvres_louvres/oeuvres_louvres_widget.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -57,9 +59,16 @@ class _MyAppState extends State<MyApp> {
     );
   }
 }
-  Future<List> loadJsonImageLouvres() async {
+
+  Future<Map<String, dynamic>> loadJsonImageLouvres() async {
     final jsonData = await rootBundle.loadString('assets/database/ImageLinks.json');
+    //print(jsonData);
     final Map<String, dynamic> imagesData = json.decode(jsonData);
-    final List imageUrls = imagesData.values.toList();
-    return imageUrls;
+    return imagesData;
+    //print(imagesData.keys);
+    //final List imageUrls = imagesData.values.toList();
+    //return imageUrls;
+
 }
+
+
