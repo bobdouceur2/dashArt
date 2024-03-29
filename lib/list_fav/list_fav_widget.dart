@@ -1,9 +1,9 @@
-import '/artis_page/artis_page_widget.dart';
 import '/components/nav_bar_music_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import '/home_page/home_page_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -75,6 +75,7 @@ class _ListFavWidgetState extends State<ListFavWidget> {
                       fontFamily: 'Poppins',
                       color: Color(0x5E9499E2),
                       fontSize: 36.0,
+                      letterSpacing: 0.0,
                     ),
               ),
             ),
@@ -102,7 +103,7 @@ class _ListFavWidgetState extends State<ListFavWidget> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => ArtisPageWidget(),
+                              builder: (context) => HomePageWidget(),
                             ),
                           );
                         },
@@ -131,6 +132,7 @@ class _ListFavWidgetState extends State<ListFavWidget> {
                                       color: FlutterFlowTheme.of(context)
                                           .lineColor,
                                       fontSize: 22.0,
+                                      letterSpacing: 0.0,
                                     ),
                               ),
                             ],
@@ -167,7 +169,10 @@ class _ListFavWidgetState extends State<ListFavWidget> {
                                             BoxShadow(
                                               blurRadius: 3.0,
                                               color: Color(0x25000000),
-                                              offset: Offset(0.0, 2.0),
+                                              offset: Offset(
+                                                0.0,
+                                                2.0,
+                                              ),
                                             )
                                           ],
                                           borderRadius:
@@ -227,6 +232,7 @@ class _ListFavWidgetState extends State<ListFavWidget> {
                                                           color:
                                                               Color(0xFF101213),
                                                           fontSize: 16.0,
+                                                          letterSpacing: 0.0,
                                                           fontWeight:
                                                               FontWeight.w500,
                                                         ),
@@ -247,6 +253,7 @@ class _ListFavWidgetState extends State<ListFavWidget> {
                                                             color: Color(
                                                                 0xFF4B39EF),
                                                             fontSize: 14.0,
+                                                            letterSpacing: 0.0,
                                                             fontWeight:
                                                                 FontWeight.w500,
                                                           ),
@@ -297,7 +304,10 @@ class _ListFavWidgetState extends State<ListFavWidget> {
                                             BoxShadow(
                                               blurRadius: 3.0,
                                               color: Color(0x25000000),
-                                              offset: Offset(0.0, 2.0),
+                                              offset: Offset(
+                                                0.0,
+                                                2.0,
+                                              ),
                                             )
                                           ],
                                           borderRadius:
@@ -355,6 +365,7 @@ class _ListFavWidgetState extends State<ListFavWidget> {
                                                           color:
                                                               Color(0xFF101213),
                                                           fontSize: 16.0,
+                                                          letterSpacing: 0.0,
                                                           fontWeight:
                                                               FontWeight.w500,
                                                         ),
@@ -375,6 +386,7 @@ class _ListFavWidgetState extends State<ListFavWidget> {
                                                             color: Color(
                                                                 0xFF4B39EF),
                                                             fontSize: 14.0,
+                                                            letterSpacing: 0.0,
                                                             fontWeight:
                                                                 FontWeight.w500,
                                                           ),
@@ -426,7 +438,10 @@ class _ListFavWidgetState extends State<ListFavWidget> {
                                             BoxShadow(
                                               blurRadius: 3.0,
                                               color: Color(0x25000000),
-                                              offset: Offset(0.0, 2.0),
+                                              offset: Offset(
+                                                0.0,
+                                                2.0,
+                                              ),
                                             )
                                           ],
                                           borderRadius:
@@ -484,6 +499,7 @@ class _ListFavWidgetState extends State<ListFavWidget> {
                                                           color:
                                                               Color(0xFF101213),
                                                           fontSize: 16.0,
+                                                          letterSpacing: 0.0,
                                                           fontWeight:
                                                               FontWeight.w500,
                                                         ),
@@ -504,6 +520,7 @@ class _ListFavWidgetState extends State<ListFavWidget> {
                                                             color: Color(
                                                                 0xFF4B39EF),
                                                             fontSize: 14.0,
+                                                            letterSpacing: 0.0,
                                                             fontWeight:
                                                                 FontWeight.w500,
                                                           ),
@@ -554,7 +571,10 @@ class _ListFavWidgetState extends State<ListFavWidget> {
                                             BoxShadow(
                                               blurRadius: 3.0,
                                               color: Color(0x25000000),
-                                              offset: Offset(0.0, 2.0),
+                                              offset: Offset(
+                                                0.0,
+                                                2.0,
+                                              ),
                                             )
                                           ],
                                           borderRadius:
@@ -612,6 +632,7 @@ class _ListFavWidgetState extends State<ListFavWidget> {
                                                           color:
                                                               Color(0xFF101213),
                                                           fontSize: 16.0,
+                                                          letterSpacing: 0.0,
                                                           fontWeight:
                                                               FontWeight.w500,
                                                         ),
@@ -632,6 +653,7 @@ class _ListFavWidgetState extends State<ListFavWidget> {
                                                             color: Color(
                                                                 0xFF4B39EF),
                                                             fontSize: 14.0,
+                                                            letterSpacing: 0.0,
                                                             fontWeight:
                                                                 FontWeight.w500,
                                                           ),
@@ -682,7 +704,10 @@ class _ListFavWidgetState extends State<ListFavWidget> {
                                             BoxShadow(
                                               blurRadius: 3.0,
                                               color: Color(0x25000000),
-                                              offset: Offset(0.0, 2.0),
+                                              offset: Offset(
+                                                0.0,
+                                                2.0,
+                                              ),
                                             )
                                           ],
                                           borderRadius:
@@ -740,6 +765,7 @@ class _ListFavWidgetState extends State<ListFavWidget> {
                                                           color:
                                                               Color(0xFF101213),
                                                           fontSize: 16.0,
+                                                          letterSpacing: 0.0,
                                                           fontWeight:
                                                               FontWeight.w500,
                                                         ),
@@ -760,6 +786,7 @@ class _ListFavWidgetState extends State<ListFavWidget> {
                                                             color: Color(
                                                                 0xFF4B39EF),
                                                             fontSize: 14.0,
+                                                            letterSpacing: 0.0,
                                                             fontWeight:
                                                                 FontWeight.w500,
                                                           ),
@@ -832,6 +859,7 @@ class _ListFavWidgetState extends State<ListFavWidget> {
                       fontFamily: 'Poppins',
                       color: Color(0x1C989CDC),
                       fontSize: 80.0,
+                      letterSpacing: 0.0,
                     ),
               ),
             ),

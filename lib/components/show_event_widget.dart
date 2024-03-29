@@ -129,7 +129,12 @@ class _ShowEventWidgetState extends State<ShowEventWidget>
                             children: [
                               Text(
                                 'Local: ',
-                                style: FlutterFlowTheme.of(context).bodyMedium,
+                                style: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .override(
+                                      fontFamily: 'Poppins',
+                                      letterSpacing: 0.0,
+                                    ),
                               ),
                               Text(
                                 'Hotel Music Hall',
@@ -137,6 +142,7 @@ class _ShowEventWidgetState extends State<ShowEventWidget>
                                     .bodyMedium
                                     .override(
                                       fontFamily: 'Poppins',
+                                      letterSpacing: 0.0,
                                       fontWeight: FontWeight.normal,
                                     ),
                               ),
@@ -147,7 +153,12 @@ class _ShowEventWidgetState extends State<ShowEventWidget>
                             children: [
                               Text(
                                 'Data: ',
-                                style: FlutterFlowTheme.of(context).bodyMedium,
+                                style: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .override(
+                                      fontFamily: 'Poppins',
+                                      letterSpacing: 0.0,
+                                    ),
                               ),
                               Text(
                                 '08/27/2023',
@@ -155,6 +166,7 @@ class _ShowEventWidgetState extends State<ShowEventWidget>
                                     .bodyMedium
                                     .override(
                                       fontFamily: 'Poppins',
+                                      letterSpacing: 0.0,
                                       fontWeight: FontWeight.normal,
                                     ),
                               ),
@@ -179,6 +191,7 @@ class _ShowEventWidgetState extends State<ShowEventWidget>
                                 .bodyMedium
                                 .override(
                                   fontFamily: 'Poppins',
+                                  letterSpacing: 0.0,
                                   fontWeight: FontWeight.normal,
                                 ),
                           ),

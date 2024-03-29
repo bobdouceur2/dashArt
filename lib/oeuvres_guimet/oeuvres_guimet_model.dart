@@ -11,8 +11,6 @@ class OeuvresGuimetModel extends FlutterFlowModel<OeuvresGuimetWidget> {
 
   final unfocusNode = FocusNode();
 
-  /// Initialization and disposal methods.
-
   @override
   void initState(BuildContext context) {}
 
@@ -20,8 +18,4 @@ class OeuvresGuimetModel extends FlutterFlowModel<OeuvresGuimetWidget> {
   void dispose() {
     unfocusNode.dispose();
   }
-
-  /// Action blocks are added here.
-
-  /// Additional helper methods are added here.
 }

@@ -1,3 +1,4 @@
+import '/dashboard/dashboard_widget.dart';
 import '/flutter_flow/flutter_flow_animations.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -8,6 +9,8 @@ import '/oeuvres_branly/oeuvres_branly_widget.dart';
 import '/oeuvres_guimet/oeuvres_guimet_widget.dart';
 import '/oeuvres_louvres/oeuvres_louvres_widget.dart';
 import '/oeuvres_orangerie/oeuvres_orangerie_widget.dart';
+import '/peinture/peinture_widget.dart';
+import '/sculptures/sculptures_widget.dart';
 import 'home_page_widget.dart' show HomePageWidget;
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -20,12 +23,6 @@ class HomePageModel extends FlutterFlowModel<HomePageWidget> {
   ///  State fields for stateful widgets in this page.
 
   final unfocusNode = FocusNode();
-  // State field(s) for TextFieldSearch widget.
-  FocusNode? textFieldSearchFocusNode;
-  TextEditingController? textFieldSearchController;
-  String? Function(BuildContext, String?)? textFieldSearchControllerValidator;
-
-  /// Initialization and disposal methods.
 
   @override
   void initState(BuildContext context) {}
@@ -33,11 +30,5 @@ class HomePageModel extends FlutterFlowModel<HomePageWidget> {
   @override
   void dispose() {
     unfocusNode.dispose();
-    textFieldSearchFocusNode?.dispose();
-    textFieldSearchController?.dispose();
   }
-
-  /// Action blocks are added here.
-
-  /// Additional helper methods are added here.
 }

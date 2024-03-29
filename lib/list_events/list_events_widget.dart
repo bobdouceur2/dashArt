@@ -122,6 +122,7 @@ class _ListEventsWidgetState extends State<ListEventsWidget> {
                                       color: FlutterFlowTheme.of(context)
                                           .lineColor,
                                       fontSize: 22.0,
+                                      letterSpacing: 0.0,
                                     ),
                               ),
                             ],

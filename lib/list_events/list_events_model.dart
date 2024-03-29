@@ -18,8 +18,6 @@ class ListEventsModel extends FlutterFlowModel<ListEventsWidget> {
   // Model for NavBarMusic component.
   late NavBarMusicModel navBarMusicModel;
 
-  /// Initialization and disposal methods.
-
   @override
   void initState(BuildContext context) {
     navBarMusicModel = createModel(context, () => NavBarMusicModel());
@@ -30,8 +28,4 @@ class ListEventsModel extends FlutterFlowModel<ListEventsWidget> {
     unfocusNode.dispose();
     navBarMusicModel.dispose();
   }
-
-  /// Action blocks are added here.
-
-  /// Additional helper methods are added here.
 }

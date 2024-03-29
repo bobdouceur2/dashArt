@@ -1,9 +1,9 @@
-import '/artis_page/artis_page_widget.dart';
 import '/components/nav_bar_music_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import '/home_page/home_page_widget.dart';
 import 'list_fav_widget.dart' show ListFavWidget;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -16,8 +16,6 @@ class ListFavModel extends FlutterFlowModel<ListFavWidget> {
   // Model for NavBarMusic component.
   late NavBarMusicModel navBarMusicModel;
 
-  /// Initialization and disposal methods.
-
   @override
   void initState(BuildContext context) {
     navBarMusicModel = createModel(context, () => NavBarMusicModel());
@@ -28,8 +26,4 @@ class ListFavModel extends FlutterFlowModel<ListFavWidget> {
     unfocusNode.dispose();
     navBarMusicModel.dispose();
   }
-
-  /// Action blocks are added here.
-
-  /// Additional helper methods are added here.
 }

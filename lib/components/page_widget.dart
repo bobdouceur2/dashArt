@@ -3,18 +3,18 @@ import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'nav_bar_music_model.dart';
-export 'nav_bar_music_model.dart';
+import 'page_model.dart';
+export 'page_model.dart';
 
-class NavBarMusicWidget extends StatefulWidget {
-  const NavBarMusicWidget({super.key});
+class PageWidget extends StatefulWidget {
+  const PageWidget({super.key});
 
   @override
-  State<NavBarMusicWidget> createState() => _NavBarMusicWidgetState();
+  State<PageWidget> createState() => _PageWidgetState();
 }
 
-class _NavBarMusicWidgetState extends State<NavBarMusicWidget> {
-  late NavBarMusicModel _model;
+class _PageWidgetState extends State<PageWidget> {
+  late PageModel _model;
 
   @override
   void setState(VoidCallback callback) {
@@ -25,7 +25,7 @@ class _NavBarMusicWidgetState extends State<NavBarMusicWidget> {
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => NavBarMusicModel());
+    _model = createModel(context, () => PageModel());
   }
 
   @override

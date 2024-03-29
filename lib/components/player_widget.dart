@@ -109,6 +109,7 @@ class _PlayerWidgetState extends State<PlayerWidget> {
                     style: FlutterFlowTheme.of(context).bodyMedium.override(
                           fontFamily: 'Poppins',
                           color: FlutterFlowTheme.of(context).lineColor,
+                          letterSpacing: 0.0,
                         ),
                   ),
                   Text(
@@ -116,6 +117,7 @@ class _PlayerWidgetState extends State<PlayerWidget> {
                     style: FlutterFlowTheme.of(context).bodyMedium.override(
                           fontFamily: 'Poppins',
                           color: FlutterFlowTheme.of(context).primaryBtnText,
+                          letterSpacing: 0.0,
                           fontWeight: FontWeight.normal,
                         ),
                   ),
@@ -150,6 +152,7 @@ class _PlayerWidgetState extends State<PlayerWidget> {
                                           fontFamily: 'Poppins',
                                           color: FlutterFlowTheme.of(context)
                                               .lineColor,
+                                          letterSpacing: 0.0,
                                           fontWeight: FontWeight.w600,
                                         ),
                                     playbackDurationTextStyle:
@@ -161,6 +164,7 @@ class _PlayerWidgetState extends State<PlayerWidget> {
                                                   FlutterFlowTheme.of(context)
                                                       .lineColor,
                                               fontSize: 12.0,
+                                              letterSpacing: 0.0,
                                             ),
                                     fillColor: Color(0xFF3940AD),
                                     playbackButtonColor:

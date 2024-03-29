@@ -1,3 +1,4 @@
+import '/dashboard/dashboard_widget.dart';
 import '/flutter_flow/flutter_flow_animations.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -8,6 +9,8 @@ import '/oeuvres_branly/oeuvres_branly_widget.dart';
 import '/oeuvres_guimet/oeuvres_guimet_widget.dart';
 import '/oeuvres_louvres/oeuvres_louvres_widget.dart';
 import '/oeuvres_orangerie/oeuvres_orangerie_widget.dart';
+import '/peinture/peinture_widget.dart';
+import '/sculptures/sculptures_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -218,9 +221,6 @@ class _HomePageWidgetState extends State<HomePageWidget>
     super.initState();
     _model = createModel(context, () => HomePageModel());
 
-    _model.textFieldSearchController ??= TextEditingController();
-    _model.textFieldSearchFocusNode ??= FocusNode();
-
     setupAnimations(
       animationsMap.values.where((anim) =>
           anim.trigger == AnimationTrigger.onActionTrigger ||
@@ -278,56 +278,16 @@ class _HomePageWidgetState extends State<HomePageWidget>
                     child: Row(
                       mainAxisSize: MainAxisSize.max,
                       children: [
-                        Expanded(
-                          child: TextFormField(
-                            controller: _model.textFieldSearchController,
-                            focusNode: _model.textFieldSearchFocusNode,
-                            obscureText: false,
-                            decoration: InputDecoration(
-                              labelText: 'Rechercher une oeuvre...',
-                              hintText: 'joconde, la nuit étoilée',
-                              hintStyle: FlutterFlowTheme.of(context).bodySmall,
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Color(0x00000000),
-                                  width: 1.0,
-                                ),
-                                borderRadius: BorderRadius.circular(30.0),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Color(0x00000000),
-                                  width: 1.0,
-                                ),
-                                borderRadius: BorderRadius.circular(30.0),
-                              ),
-                              errorBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Color(0x00000000),
-                                  width: 1.0,
-                                ),
-                                borderRadius: BorderRadius.circular(30.0),
-                              ),
-                              focusedErrorBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Color(0x00000000),
-                                  width: 1.0,
-                                ),
-                                borderRadius: BorderRadius.circular(30.0),
-                              ),
-                              filled: true,
-                              fillColor:
-                                  FlutterFlowTheme.of(context).primaryBtnText,
-                              suffixIcon: Icon(
-                                Icons.search_rounded,
-                                color: Color(0xFF757575),
-                                size: 22.0,
-                              ),
-                            ),
-                            style: FlutterFlowTheme.of(context).bodyMedium,
-                            validator: _model.textFieldSearchControllerValidator
-                                .asValidator(context),
-                          ),
+                        Text(
+                          'dashArt',
+                          style:
+                              FlutterFlowTheme.of(context).bodyMedium.override(
+                                    fontFamily: 'Poppins',
+                                    color: FlutterFlowTheme.of(context)
+                                        .primaryBackground,
+                                    fontSize: 24.0,
+                                    letterSpacing: 0.0,
+                                  ),
                         ),
                       ],
                     ),
@@ -352,6 +312,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                       fontFamily: 'Poppins',
                                       color: FlutterFlowTheme.of(context)
                                           .lineColor,
+                                      letterSpacing: 0.0,
                                     ),
                               ),
                             ],
@@ -588,6 +549,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
                               .override(
                                 fontFamily: 'Poppins',
                                 color: FlutterFlowTheme.of(context).lineColor,
+                                letterSpacing: 0.0,
                               ),
                         ),
                         Icon(
@@ -640,18 +602,37 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                             borderRadius:
                                                 BorderRadius.circular(10.0),
                                           ),
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.max,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Text(
-                                                'Peintures',
-                                                style:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodyMedium,
-                                              ),
-                                            ],
+                                          child: InkWell(
+                                            splashColor: Colors.transparent,
+                                            focusColor: Colors.transparent,
+                                            hoverColor: Colors.transparent,
+                                            highlightColor: Colors.transparent,
+                                            onTap: () async {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      PeintureWidget(),
+                                                ),
+                                              );
+                                            },
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.max,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  'Peintures',
+                                                  style: FlutterFlowTheme.of(
+                                                          context)
+                                                      .bodyMedium
+                                                      .override(
+                                                        fontFamily: 'Poppins',
+                                                        letterSpacing: 0.0,
+                                                      ),
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ).animateOnPageLoad(animationsMap[
                                             'containerOnPageLoadAnimation6']!),
@@ -678,18 +659,37 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                             borderRadius:
                                                 BorderRadius.circular(10.0),
                                           ),
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.max,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Text(
-                                                'Sculptures',
-                                                style:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodyMedium,
-                                              ),
-                                            ],
+                                          child: InkWell(
+                                            splashColor: Colors.transparent,
+                                            focusColor: Colors.transparent,
+                                            hoverColor: Colors.transparent,
+                                            highlightColor: Colors.transparent,
+                                            onTap: () async {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      SculpturesWidget(),
+                                                ),
+                                              );
+                                            },
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.max,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  'Sculptures',
+                                                  style: FlutterFlowTheme.of(
+                                                          context)
+                                                      .bodyMedium
+                                                      .override(
+                                                        fontFamily: 'Poppins',
+                                                        letterSpacing: 0.0,
+                                                      ),
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ).animateOnPageLoad(animationsMap[
                                             'containerOnPageLoadAnimation7']!),
@@ -716,18 +716,37 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                             borderRadius:
                                                 BorderRadius.circular(10.0),
                                           ),
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.max,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Text(
-                                                'Arts Graphiques',
-                                                style:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodyMedium,
-                                              ),
-                                            ],
+                                          child: InkWell(
+                                            splashColor: Colors.transparent,
+                                            focusColor: Colors.transparent,
+                                            hoverColor: Colors.transparent,
+                                            highlightColor: Colors.transparent,
+                                            onTap: () async {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      DashboardWidget(),
+                                                ),
+                                              );
+                                            },
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.max,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  'Statistiques',
+                                                  style: FlutterFlowTheme.of(
+                                                          context)
+                                                      .bodyMedium
+                                                      .override(
+                                                        fontFamily: 'Poppins',
+                                                        letterSpacing: 0.0,
+                                                      ),
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ).animateOnPageLoad(animationsMap[
                                             'containerOnPageLoadAnimation8']!),
@@ -756,6 +775,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                 fontFamily: 'Poppins',
                                 color: FlutterFlowTheme.of(context).lineColor,
                                 fontSize: 26.0,
+                                letterSpacing: 0.0,
                               ),
                         ),
                         Icon(
