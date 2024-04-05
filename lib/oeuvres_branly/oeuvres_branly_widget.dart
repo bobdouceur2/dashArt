@@ -2,6 +2,7 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'oeuvres_branly_model.dart';
@@ -61,7 +62,21 @@ class _OeuvresBranlyWidgetState extends State<OeuvresBranlyWidget> {
           top: true,
           child: Column(
             mainAxisSize: MainAxisSize.max,
-            children: [],
+            children: [
+              Expanded(
+                child: MasonryGridView.builder(
+                  gridDelegate: SliverSimpleGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                  ),
+                  crossAxisSpacing: 10.0,
+                  mainAxisSpacing: 10.0,
+                  itemCount: 0,
+                  itemBuilder: (context, index) {
+                    return [][index]();
+                  },
+                ),
+              ),
+            ],
           ),
         ),
       ),

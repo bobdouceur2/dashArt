@@ -4,11 +4,9 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/list_events/list_events_widget.dart';
-import '/oeuvres_art_deco/oeuvres_art_deco_widget.dart';
 import '/oeuvres_branly/oeuvres_branly_widget.dart';
 import '/oeuvres_guimet/oeuvres_guimet_widget.dart';
 import '/oeuvres_louvres/oeuvres_louvres_widget.dart';
-import '/oeuvres_orangerie/oeuvres_orangerie_widget.dart';
 import '/peinture/peinture_widget.dart';
 import '/sculptures/sculptures_widget.dart';
 import 'package:flutter/material.dart';
@@ -135,46 +133,6 @@ class _HomePageWidgetState extends State<HomePageWidget>
       ],
     ),
     'containerOnPageLoadAnimation6': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      effects: [
-        VisibilityEffect(duration: 1.ms),
-        FadeEffect(
-          curve: Curves.linear,
-          delay: 0.ms,
-          duration: 600.ms,
-          begin: 0.0,
-          end: 1.0,
-        ),
-        MoveEffect(
-          curve: Curves.linear,
-          delay: 0.ms,
-          duration: 600.ms,
-          begin: Offset(100.0, 0.0),
-          end: Offset(0.0, 0.0),
-        ),
-      ],
-    ),
-    'containerOnPageLoadAnimation7': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      effects: [
-        VisibilityEffect(duration: 1.ms),
-        FadeEffect(
-          curve: Curves.linear,
-          delay: 0.ms,
-          duration: 600.ms,
-          begin: 0.0,
-          end: 1.0,
-        ),
-        MoveEffect(
-          curve: Curves.linear,
-          delay: 0.ms,
-          duration: 600.ms,
-          begin: Offset(100.0, 0.0),
-          end: Offset(0.0, 0.0),
-        ),
-      ],
-    ),
-    'containerOnPageLoadAnimation8': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
       effects: [
         VisibilityEffect(duration: 1.ms),
@@ -449,84 +407,6 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                       ).animateOnPageLoad(animationsMap[
                                           'containerOnPageLoadAnimation3']!),
                                     ),
-                                    Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          10.0, 0.0, 0.0, 0.0),
-                                      child: Container(
-                                        width: 70.0,
-                                        height: 50.0,
-                                        decoration: BoxDecoration(
-                                          color: Colors.transparent,
-                                        ),
-                                        child: InkWell(
-                                          splashColor: Colors.transparent,
-                                          focusColor: Colors.transparent,
-                                          hoverColor: Colors.transparent,
-                                          highlightColor: Colors.transparent,
-                                          onTap: () async {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    OeuvresOrangerieWidget(),
-                                              ),
-                                            );
-                                          },
-                                          child: Container(
-                                            width: 90.0,
-                                            height: 90.0,
-                                            clipBehavior: Clip.antiAlias,
-                                            decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                            ),
-                                            child: Image.asset(
-                                              'assets/images/IMG_0346.jpeg',
-                                              fit: BoxFit.cover,
-                                            ),
-                                          ),
-                                        ),
-                                      ).animateOnPageLoad(animationsMap[
-                                          'containerOnPageLoadAnimation4']!),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          10.0, 0.0, 0.0, 0.0),
-                                      child: Container(
-                                        width: 70.0,
-                                        height: 50.0,
-                                        decoration: BoxDecoration(
-                                          color: Colors.transparent,
-                                        ),
-                                        child: InkWell(
-                                          splashColor: Colors.transparent,
-                                          focusColor: Colors.transparent,
-                                          hoverColor: Colors.transparent,
-                                          highlightColor: Colors.transparent,
-                                          onTap: () async {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    OeuvresArtDecoWidget(),
-                                              ),
-                                            );
-                                          },
-                                          child: Container(
-                                            width: 90.0,
-                                            height: 90.0,
-                                            clipBehavior: Clip.antiAlias,
-                                            decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                            ),
-                                            child: Image.asset(
-                                              'assets/images/IMG_0347.jpeg',
-                                              fit: BoxFit.cover,
-                                            ),
-                                          ),
-                                        ),
-                                      ).animateOnPageLoad(animationsMap[
-                                          'containerOnPageLoadAnimation5']!),
-                                    ),
                                   ],
                                 ),
                               ),
@@ -551,11 +431,6 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                 color: FlutterFlowTheme.of(context).lineColor,
                                 letterSpacing: 0.0,
                               ),
-                        ),
-                        Icon(
-                          Icons.keyboard_control_outlined,
-                          color: FlutterFlowTheme.of(context).primaryBtnText,
-                          size: 24.0,
                         ),
                       ],
                     ),
@@ -635,7 +510,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                             ),
                                           ),
                                         ).animateOnPageLoad(animationsMap[
-                                            'containerOnPageLoadAnimation6']!),
+                                            'containerOnPageLoadAnimation4']!),
                                       ),
                                       Padding(
                                         padding: EdgeInsetsDirectional.fromSTEB(
@@ -692,7 +567,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                             ),
                                           ),
                                         ).animateOnPageLoad(animationsMap[
-                                            'containerOnPageLoadAnimation7']!),
+                                            'containerOnPageLoadAnimation5']!),
                                       ),
                                       Padding(
                                         padding: EdgeInsetsDirectional.fromSTEB(
@@ -736,7 +611,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                                   MainAxisAlignment.center,
                                               children: [
                                                 Text(
-                                                  'Statistiques',
+                                                  'Dashboard',
                                                   style: FlutterFlowTheme.of(
                                                           context)
                                                       .bodyMedium
@@ -749,7 +624,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                             ),
                                           ),
                                         ).animateOnPageLoad(animationsMap[
-                                            'containerOnPageLoadAnimation8']!),
+                                            'containerOnPageLoadAnimation6']!),
                                       ),
                                     ],
                                   ),
@@ -777,11 +652,6 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                 fontSize: 26.0,
                                 letterSpacing: 0.0,
                               ),
-                        ),
-                        Icon(
-                          Icons.keyboard_control_outlined,
-                          color: FlutterFlowTheme.of(context).lineColor,
-                          size: 24.0,
                         ),
                       ],
                     ),
@@ -848,13 +718,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                               highlightColor:
                                                   Colors.transparent,
                                               onTap: () async {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        ListEventsWidget(),
-                                                  ),
-                                                );
+                                                Navigator.pop(context);
                                               },
                                               child: ClipRRect(
                                                 borderRadius:

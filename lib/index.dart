@@ -1,7 +1,6 @@
 // Export pages
 export '/home_page/home_page_widget.dart' show HomePageWidget;
 export '/list_events/list_events_widget.dart' show ListEventsWidget;
-export '/list_fav/list_fav_widget.dart' show ListFavWidget;
 export '/oeuvres_louvres/oeuvres_louvres_widget.dart' show OeuvresLouvresWidget;
 export '/oeuvres_guimet/oeuvres_guimet_widget.dart' show OeuvresGuimetWidget;
 export '/oeuvres_branly/oeuvres_branly_widget.dart' show OeuvresBranlyWidget;
