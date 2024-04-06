@@ -243,8 +243,9 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                     fontFamily: 'Poppins',
                                     color: FlutterFlowTheme.of(context)
                                         .primaryBackground,
-                                    fontSize: 24.0,
+                                    fontSize: 35.0,
                                     letterSpacing: 0.0,
+                                    fontWeight: FontWeight.w600,
                                   ),
                         ),
                       ],
@@ -270,6 +271,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                       fontFamily: 'Poppins',
                                       color: FlutterFlowTheme.of(context)
                                           .lineColor,
+                                      fontSize: 24.0,
                                       letterSpacing: 0.0,
                                     ),
                               ),
@@ -423,16 +425,26 @@ class _HomePageWidgetState extends State<HomePageWidget>
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Catégories',
-                          style: FlutterFlowTheme.of(context)
-                              .bodyMedium
-                              .override(
-                                fontFamily: 'Poppins',
-                                color: FlutterFlowTheme.of(context).lineColor,
-                                letterSpacing: 0.0,
-                              ),
+                          '.',
+                          style:
+                              FlutterFlowTheme.of(context).bodyMedium.override(
+                                    fontFamily: 'Poppins',
+                                    letterSpacing: 0.0,
+                                  ),
                         ),
                       ],
+                    ),
+                  ),
+                  Align(
+                    alignment: AlignmentDirectional(-1.0, 0.0),
+                    child: Text(
+                      '  Catégories',
+                      style: FlutterFlowTheme.of(context).bodyMedium.override(
+                            fontFamily: 'Poppins',
+                            color: FlutterFlowTheme.of(context).lineColor,
+                            fontSize: 24.0,
+                            letterSpacing: 0.0,
+                          ),
                     ),
                   ),
                   Padding(
@@ -649,7 +661,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
                               .override(
                                 fontFamily: 'Poppins',
                                 color: FlutterFlowTheme.of(context).lineColor,
-                                fontSize: 26.0,
+                                fontSize: 24.0,
                                 letterSpacing: 0.0,
                               ),
                         ),
