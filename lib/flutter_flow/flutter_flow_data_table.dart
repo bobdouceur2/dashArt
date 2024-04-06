@@ -8,6 +8,7 @@ export 'package:data_table_2/data_table_2.dart' show DataColumn2;
 const _kDataTableHorizontalMargin = 48.0;
 const kDefaultColumnSpacing = 56.0;
 const _kMinRowsPerPage = 5;
+const defaultRowsPerPage = 5;
 
 typedef ColumnsBuilder<T> = List<DataColumn> Function(void Function(int, bool));
 typedef DataRowBuilder<T> = DataRow? Function(
@@ -36,7 +37,8 @@ class FlutterFlowDataTableController<T> extends DataTableSource {
   bool _selectable = false;
   final Set<int> selectedRows = {};
 
-  int rowsPerPage = defaultRowsPerPage;
+  
+  int rowsPerPage = 5;
   int? sortColumnIndex;
   bool sortAscending = true;
 
@@ -201,7 +203,7 @@ class _FlutterFlowDataTableState<T> extends State<FlutterFlowDataTable<T>> {
   int get rowCount => controller.rowCount;
 
   int get initialRowsPerPage =>
-      rowCount > _kMinRowsPerPage ? defaultRowsPerPage : _kMinRowsPerPage;
+      rowCount > _kMinRowsPerPage ? defaultRowsPerPage : 5;
 
   @override
   void initState() {
@@ -283,8 +285,7 @@ class _FlutterFlowDataTableState<T> extends State<FlutterFlowDataTable<T>> {
             source: controller,
             controller:
                 widget.paginated ? controller.paginatorController : null,
-            rowsPerPage: widget.paginated ? initialRowsPerPage : rowCount,
-            availableRowsPerPage: const [5, 10, 25, 50, 100],
+            rowsPerPage: widget.paginated ? initialRowsPerPage : 5,
             onPageChanged: widget.onPageChanged != null
                 ? (index) => widget.onPageChanged!(index)
                 : null,
