@@ -1,11 +1,13 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-
+import 'dart:convert';
 import 'package:flutter_localizations/flutter_localizations.dart';
-
+import 'package:http/http.dart' as http;
 import 'flutter_flow/flutter_flow_theme.dart';
 import 'flutter_flow/flutter_flow_util.dart';
 import 'index.dart';
+import 'oeuvres_louvres/oeuvres_louvres_widget.dart';
+import 'package:flutter/services.dart' show rootBundle;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -54,5 +56,28 @@ class _MyAppState extends State<MyApp> {
       home: HomePageWidget(),
       navigatorObservers: [routeObserver],
     );
+  }
+}
+Future<Map<String, String>> loadJsonImageLouvres() async {
+  final response = await http.get(
+      Uri.parse('http://localhost:3000/image-links'));
+
+  if (response.statusCode == 200) {
+    final jsonData = response.body;
+    final List<dynamic> imagesData = json.decode(jsonData);
+
+    // Créer un Map pour stocker les titres et les liens
+    Map<String, String> imagesMap = {};
+
+    // Parcourir les données JSON et ajouter les titres et les liens au Map
+    imagesData.forEach((image) {
+      String titre = image['titre'];
+      String lien = image['lien'];
+      imagesMap[titre] = lien;
+    });
+
+    return imagesMap;
+  } else {
+    throw Exception('Failed to load ImageLinks.json');
   }
 }
