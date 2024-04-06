@@ -150,56 +150,16 @@ class _DashboardWidgetState extends State<DashboardWidget>
                                       MediaQuery.sizeOf(context).height * 0.5,
                                   child: FlutterFlowLineChart(
                                     data: [
-                                      FFLineChartData(
-                                        xData: List.generate(
-                                            random_data.randomInteger(0, 0),
-                                            (index) => random_data
-                                                .randomInteger(0, 10)),
-                                        yData: List.generate(
-                                            random_data.randomInteger(0, 0),
-                                            (index) => random_data
-                                                .randomInteger(0, 10)),
-                                        settings: LineChartBarData(
-                                          color: FlutterFlowTheme.of(context)
-                                              .primary,
-                                          barWidth: 2.0,
-                                          isCurved: true,
-                                          dotData: FlDotData(show: false),
-                                        ),
-                                      ),
-                                      FFLineChartData(
-                                        xData: List.generate(
-                                            random_data.randomInteger(0, 0),
-                                            (index) => random_data
-                                                .randomInteger(0, 10)),
-                                        yData: List.generate(
-                                            random_data.randomInteger(0, 0),
-                                            (index) => random_data
-                                                .randomInteger(0, 10)),
-                                        settings: LineChartBarData(
-                                          color: const Color(0xFF6F28CB),
-                                          barWidth: 2.0,
-                                          isCurved: true,
-                                          dotData: FlDotData(show: false),
-                                        ),
-                                      ),
-                                      FFLineChartData(
-                                        xData: List.generate(
-                                            random_data.randomInteger(0, 0),
-                                            (index) => random_data
-                                                .randomInteger(0, 10)),
-                                        yData: List.generate(
-                                            random_data.randomInteger(0, 0),
-                                            (index) => random_data
-                                                .randomInteger(0, 10)),
-                                        settings: LineChartBarData(
-                                          color: const Color(0xFF2536A4),
-                                          barWidth: 2.0,
-                                          isCurved: true,
-                                          dotData: FlDotData(show: false),
-                                        ),
-                                      )
+                                  FFLineChartData(
+                                  xData: [1, 2, 3, 4, 5],  // Valeurs fixes pour l'axe X
+                                    yData: [10, 20, 30, 40, 50],  // Valeurs fixes pour l'axe Y
+                                    settings: LineChartBarData(
+                                      color: FlutterFlowTheme.of(context).primary,
+                                    ),
+                                  ),
+                                    // Ajoutez d'autres FFLineChartData si nécessaire
                                     ],
+
                                     chartStylingInfo: ChartStylingInfo(
                                       backgroundColor:
                                           FlutterFlowTheme.of(context)
@@ -227,98 +187,77 @@ class _DashboardWidgetState extends State<DashboardWidget>
                                 ),
                               ),
                             ),
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsetsDirectional.fromSTEB(
-                                    25.0, 0.0, 0.0, 0.0),
-                                child: Builder(
-                                  builder: (context) {
-                                    final derniersconsultes = List.generate(
-                                        random_data.randomInteger(0, 0),
-                                        (index) => random_data.randomString(
-                                              0,
-                                              0,
-                                              true,
-                                              false,
-                                              false,
-                                            )).toList();
-                                    return FlutterFlowDataTable<String>(
-                                      controller:
-                                          _model.paginatedDataTableController1,
-                                      data: derniersconsultes,
-                                      columnsBuilder: (onSortChanged) => [
-                                        DataColumn2(
-                                          label: DefaultTextStyle.merge(
-                                            softWrap: true,
-                                            child: Text(
-                                              'HISTORIQUE',
-                                              style:
-                                                  FlutterFlowTheme.of(context)
-                                                      .labelLarge
-                                                      .override(
-                                                        fontFamily: 'Poppins',
-                                                        color: FlutterFlowTheme
-                                                                .of(context)
-                                                            .primaryBackground,
-                                                        fontSize: 20.0,
-                                                        letterSpacing: 0.0,
-                                                      ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                      dataRowBuilder: (derniersconsultesItem,
-                                              derniersconsultesIndex,
-                                              selected,
-                                              onSelectChanged) =>
-                                          DataRow(
-                                        color: MaterialStateProperty.all(
-                                          derniersconsultesIndex % 2 == 0
-                                              ? FlutterFlowTheme.of(context)
-                                                  .secondaryBackground
-                                              : FlutterFlowTheme.of(context)
-                                                  .primaryBackground,
-                                        ),
-                                        cells: [
-                                          Text(
-                                            'Edit Column 1',
-                                            style: FlutterFlowTheme.of(context)
-                                                .bodyMedium
-                                                .override(
-                                                  fontFamily: 'Poppins',
-                                                  letterSpacing: 0.0,
-                                                ),
-                                          ),
-                                        ].map((c) => DataCell(c)).toList(),
-                                      ),
-                                      paginated: false,
-                                      selectable: false,
-                                      width: MediaQuery.sizeOf(context).width *
-                                          0.4,
-                                      height:
-                                          MediaQuery.sizeOf(context).height *
-                                              0.4,
-                                      headingRowHeight: 56.0,
-                                      dataRowHeight: 48.0,
-                                      columnSpacing: 20.0,
-                                      headingRowColor:
-                                          FlutterFlowTheme.of(context).primary,
-                                      borderRadius: BorderRadius.circular(8.0),
-                                      addHorizontalDivider: true,
-                                      addTopAndBottomDivider: false,
-                                      hideDefaultHorizontalDivider: true,
-                                      horizontalDividerColor:
-                                          FlutterFlowTheme.of(context)
-                                              .secondaryBackground,
-                                      horizontalDividerThickness: 1.0,
-                                      addVerticalDivider: false,
-                                    );
-                                  },
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsetsDirectional.fromSTEB(25.0, 0.0, 0.0, 0.0),
+                      child: Builder(
+                        builder: (context) {
+                          // Définition des données fixes
+                          final derniersconsultes = [
+                            "Consultation 1",
+                            "Consultation 2",
+                            "Consultation 3",
+                            "Consultation 4",
+                            "Consultation 5",
+                          ];
+
+                          return FlutterFlowDataTable<String>(
+                            controller: _model.paginatedDataTableController1,
+                            data: derniersconsultes,
+                            columnsBuilder: (onSortChanged) => [
+                              DataColumn2(
+                                label: DefaultTextStyle.merge(
+                                  softWrap: true,
+                                  child: Text(
+                                    'HISTORIQUE',
+                                    style: FlutterFlowTheme.of(context).labelLarge.override(
+                                      fontFamily: 'Poppins',
+                                      color: FlutterFlowTheme.of(context).primaryBackground,
+                                      fontSize: 20.0,
+                                      letterSpacing: 0.0,
+                                    ),
+                                  ),
                                 ),
                               ),
+                            ],
+                            dataRowBuilder: (derniersconsultesItem, derniersconsultesIndex, selected, onSelectChanged) => DataRow(
+                              color: MaterialStateProperty.all(
+                                derniersconsultesIndex % 2 == 0 ? FlutterFlowTheme.of(context).secondaryBackground : FlutterFlowTheme.of(context).primaryBackground,
+                              ),
+                              cells: [
+                                DataCell(
+                                  Text(
+                                    derniersconsultesItem,  // Utilisation de l'item de la liste pour la cellule
+                                    style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                      fontFamily: 'Poppins',
+                                      letterSpacing: 0.0,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ).animateOnPageLoad(
+                            paginated: false,
+                            selectable: false,
+                            width: MediaQuery.sizeOf(context).width * 0.4,
+                            height: MediaQuery.sizeOf(context).height * 0.4,
+                            headingRowHeight: 56.0,
+                            dataRowHeight: 48.0,
+                            columnSpacing: 20.0,
+                            headingRowColor: FlutterFlowTheme.of(context).primary,
+                            borderRadius: BorderRadius.circular(8.0),
+                            addHorizontalDivider: true,
+                            addTopAndBottomDivider: false,
+                            hideDefaultHorizontalDivider: true,
+                            horizontalDividerColor: FlutterFlowTheme.of(context).secondaryBackground,
+                            horizontalDividerThickness: 1.0,
+                            addVerticalDivider: false,
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+
+      ]).animateOnPageLoad(
                             animationsMap['columnOnPageLoadAnimation1']!),
                       ),
                       Align(
@@ -328,7 +267,7 @@ class _DashboardWidgetState extends State<DashboardWidget>
                           children: [
                             Padding(
                               padding: const EdgeInsetsDirectional.fromSTEB(
-                                  50.0, 75.0, 0.0, 75.0),
+                                  60.0, 75.0, 0.0, 75.0),
                               child: Container(
                                 width: 300.0,
                                 height: 300.0,
@@ -404,7 +343,7 @@ class _DashboardWidgetState extends State<DashboardWidget>
                             ),
                             Padding(
                               padding: const EdgeInsetsDirectional.fromSTEB(
-                                  50.0, 0.0, 0.0, 10.0),
+                                  60.0, 0.0, 0.0, 10.0),
                               child: FlutterFlowDropDown<String>(
                                 controller: _model.dropDownValueController ??=
                                     FormFieldController<String>(null),
@@ -446,82 +385,66 @@ class _DashboardWidgetState extends State<DashboardWidget>
                             ),
                             Expanded(
                               child: Padding(
-                                padding: const EdgeInsetsDirectional.fromSTEB(
-                                    50.0, 0.0, 0.0, 0.0),
+                                padding: const EdgeInsetsDirectional.fromSTEB(60.0, 20.0, 0.0, 0.0),
                                 child: Builder(
                                   builder: (context) {
-                                    final top5 = List.generate(
-                                        random_data.randomInteger(0, 0),
-                                        (index) => random_data.randomString(
-                                              0,
-                                              0,
-                                              true,
-                                              false,
-                                              false,
-                                            )).toList();
+                                    // Définition des données fixes
+                                    final derniersconsultes = [
+                                      "Consultation 1",
+                                      "Consultation 2",
+                                      "Consultation 3",
+                                      "Consultation 4",
+                                      "Consultation 5",
+                                    ];
+
                                     return FlutterFlowDataTable<String>(
-                                      controller:
-                                          _model.paginatedDataTableController2,
-                                      data: top5,
+                                      controller: _model.paginatedDataTableController1,
+                                      data: derniersconsultes,
                                       columnsBuilder: (onSortChanged) => [
                                         DataColumn2(
                                           label: DefaultTextStyle.merge(
                                             softWrap: true,
                                             child: Text(
-                                              'Edit Header 1',
-                                              style:
-                                                  FlutterFlowTheme.of(context)
-                                                      .labelLarge
-                                                      .override(
-                                                        fontFamily: 'Poppins',
-                                                        letterSpacing: 0.0,
-                                                      ),
+                                              'HISTORIQUE',
+                                              style: FlutterFlowTheme.of(context).labelLarge.override(
+                                                fontFamily: 'Poppins',
+                                                color: FlutterFlowTheme.of(context).primaryBackground,
+                                                fontSize: 20.0,
+                                                letterSpacing: 0.0,
+                                              ),
                                             ),
                                           ),
                                         ),
                                       ],
-                                      dataRowBuilder: (top5Item, top5Index,
-                                              selected, onSelectChanged) =>
-                                          DataRow(
+                                      dataRowBuilder: (derniersconsultesItem, derniersconsultesIndex, selected, onSelectChanged) => DataRow(
                                         color: MaterialStateProperty.all(
-                                          top5Index % 2 == 0
-                                              ? FlutterFlowTheme.of(context)
-                                                  .secondaryBackground
-                                              : FlutterFlowTheme.of(context)
-                                                  .primaryBackground,
+                                          derniersconsultesIndex % 2 == 0 ? FlutterFlowTheme.of(context).secondaryBackground : FlutterFlowTheme.of(context).primaryBackground,
                                         ),
                                         cells: [
-                                          Text(
-                                            'Edit Column 1',
-                                            style: FlutterFlowTheme.of(context)
-                                                .bodyMedium
-                                                .override(
-                                                  fontFamily: 'Poppins',
-                                                  letterSpacing: 0.0,
-                                                ),
+                                          DataCell(
+                                            Text(
+                                              derniersconsultesItem,  // Utilisation de l'item de la liste pour la cellule
+                                              style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                fontFamily: 'Poppins',
+                                                letterSpacing: 0.0,
+                                              ),
+                                            ),
                                           ),
-                                        ].map((c) => DataCell(c)).toList(),
+                                        ],
                                       ),
                                       paginated: false,
                                       selectable: false,
-                                      width: MediaQuery.sizeOf(context).width *
-                                          0.2,
-                                      height:
-                                          MediaQuery.sizeOf(context).height *
-                                              0.2,
+                                      width: MediaQuery.sizeOf(context).width * 0.2,
+                                      height: MediaQuery.sizeOf(context).height * 0.4,
                                       headingRowHeight: 56.0,
                                       dataRowHeight: 48.0,
                                       columnSpacing: 20.0,
-                                      headingRowColor:
-                                          FlutterFlowTheme.of(context)
-                                              .primaryBackground,
-                                      borderRadius: BorderRadius.circular(10.0),
+                                      headingRowColor: FlutterFlowTheme.of(context).primary,
+                                      borderRadius: BorderRadius.circular(8.0),
                                       addHorizontalDivider: true,
                                       addTopAndBottomDivider: false,
                                       hideDefaultHorizontalDivider: true,
-                                      horizontalDividerColor:
-                                          FlutterFlowTheme.of(context)
-                                              .secondaryBackground,
+                                      horizontalDividerColor: FlutterFlowTheme.of(context).secondaryBackground,
                                       horizontalDividerThickness: 1.0,
                                       addVerticalDivider: false,
                                     );
@@ -529,6 +452,7 @@ class _DashboardWidgetState extends State<DashboardWidget>
                                 ),
                               ),
                             ),
+
                           ],
                         ).animateOnPageLoad(
                             animationsMap['columnOnPageLoadAnimation2']!),
@@ -575,17 +499,15 @@ class _DashboardWidgetState extends State<DashboardWidget>
                               alignment: const AlignmentDirectional(1.0, -1.0),
                               child: Padding(
                                 padding: const EdgeInsetsDirectional.fromSTEB(
-                                    0.0, 0.0, 45.0, 0.0),
+                                    0.0, 40.0, 45.0, 0.0),
                                 child: SizedBox(
                                   width: 370.0,
                                   height: 400.0,
                                   child: FlutterFlowPieChart(
                                     data: FFPieChartData(
-                                      values: List.generate(
-                                          random_data.randomInteger(0, 0),
-                                          (index) =>
-                                              random_data.randomInteger(0, 10)),
-                                      colors: chartPieChartColorsList3,
+                                      // Remplacez les valeurs générées aléatoirement par des valeurs fixes
+                                      values: [10, 20, 30, 40, 50],
+                                      colors: chartPieChartColorsList2,
                                       radius: [100.0],
                                     ),
                                     donutHoleRadius: 70.0,
