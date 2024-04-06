@@ -548,10 +548,8 @@ class _DashboardWidgetState extends State<DashboardWidget>
                                   height: 400.0,
                                   child: FlutterFlowPieChart(
                                     data: FFPieChartData(
-                                      values: List.generate(
-                                          random_data.randomInteger(0, 0),
-                                          (index) =>
-                                              random_data.randomInteger(0, 10)),
+                                      // Remplacez les valeurs générées aléatoirement par des valeurs fixes
+                                      values: [10, 20, 30, 40, 50],
                                       colors: chartPieChartColorsList2,
                                       radius: [100.0],
                                     ),
