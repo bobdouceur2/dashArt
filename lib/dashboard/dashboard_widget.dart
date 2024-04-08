@@ -15,6 +15,8 @@ import 'package:provider/provider.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
 import 'dashboard_model.dart';
 export 'dashboard_model.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class DashboardWidget extends StatefulWidget {
   const DashboardWidget({super.key});
@@ -26,6 +28,9 @@ class DashboardWidget extends StatefulWidget {
 class _DashboardWidgetState extends State<DashboardWidget>
     with TickerProviderStateMixin {
   late DashboardModel _model;
+
+  List<Map<String, dynamic>> historiqueDataLouvres = [];
+  List<Map<String, dynamic>> VueDataLouvres = [];
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -72,7 +77,44 @@ class _DashboardWidgetState extends State<DashboardWidget>
   void initState() {
     super.initState();
     _model = createModel(context, () => DashboardModel());
+    fetchHistoriqueDataLouvres();
+    fetchVueDataLouvres();
   }
+  void fetchHistoriqueDataLouvres() async {
+    try {
+      final response = await http.get(Uri.parse('http://localhost:3000/last-requests-louvres'));
+      if (response.statusCode == 200) {
+        final jsonData = json.decode(response.body);
+        final List<Map<String, dynamic>> historiqueDataList = List<Map<String, dynamic>>.from(jsonData);
+        setState(() {
+          historiqueDataLouvres = historiqueDataList;
+        });
+      } else {
+        print('Failed to load historiqueData');
+      }
+    } catch (e) {
+      print('Error fetching historiqueData: $e');
+    }
+  }
+
+  void fetchVueDataLouvres() async {
+    try {
+      final response = await http.get(Uri.parse('http://localhost:3000/click-counter-louvres'));
+      if (response.statusCode == 200) {
+        final jsonData = json.decode(response.body);
+        final List<Map<String, dynamic>> clickcounter = List<Map<String, dynamic>>.from(jsonData);
+        setState(() {
+          VueDataLouvres = clickcounter;
+        });
+      } else {
+        print('Failed to load clickcounter');
+      }
+    } catch (e) {
+      print('Error fetching clickcounter: $e');
+    }
+  }
+
+
 
   @override
   void dispose() {
@@ -95,6 +137,7 @@ class _DashboardWidgetState extends State<DashboardWidget>
       const Color(0xFF2536A4),
       const Color(0xFF4A57C1)
     ];
+    int sumOfViews = VueDataLouvres.map<int>((item) => item['nombresdevue'] as int).reduce((value, element) => value + element);
     return GestureDetector(
       onTap: () => _model.unfocusNode.canRequestFocus
           ? FocusScope.of(context).requestFocus(_model.unfocusNode)
@@ -161,11 +204,8 @@ class _DashboardWidgetState extends State<DashboardWidget>
                                     ],
 
                                     chartStylingInfo: ChartStylingInfo(
-                                      backgroundColor:
-                                          FlutterFlowTheme.of(context)
-                                              .secondaryBackground,
-                                      borderColor: FlutterFlowTheme.of(context)
-                                          .secondaryText,
+                                      backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
+                                      borderColor: FlutterFlowTheme.of(context).secondaryText,
                                       borderWidth: 1.0,
                                     ),
                                     axisBounds: const AxisBounds(),
@@ -175,6 +215,8 @@ class _DashboardWidgetState extends State<DashboardWidget>
                                         fontWeight: FontWeight.bold,
                                         fontSize: 20.0,
                                       ),
+                                      showLabels: true,
+                                      //labelInterval: 10,
                                     ),
                                     yAxisLabelInfo: const AxisLabelInfo(
                                       title: 'NOMBRE DE VUES',
@@ -187,79 +229,98 @@ class _DashboardWidgetState extends State<DashboardWidget>
                                 ),
                               ),
                             ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsetsDirectional.fromSTEB(25.0, 0.0, 0.0, 0.0),
-                      child: Builder(
-                        builder: (context) {
-                          // Définition des données fixes
-                          final derniersconsultes = [
-                            "Consultation 1",
-                            "Consultation 2",
-                            "Consultation 3",
-                            "Consultation 4",
-                            "Consultation 5",
-                          ];
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsetsDirectional.fromSTEB(25.0, 0.0, 0.0, 0.0),
+                                child: Builder(
+                                  builder: (context) {
+                                    return FlutterFlowDataTable<Map<String, dynamic>>(
+                                      controller: _model.paginatedDataTableController2,
+                                      data: historiqueDataLouvres,
+                                      columnsBuilder: (onSortChanged) => [
 
-                          return FlutterFlowDataTable<String>(
-                            controller: _model.paginatedDataTableController1,
-                            data: derniersconsultes,
-                            columnsBuilder: (onSortChanged) => [
-                              DataColumn2(
-                                label: DefaultTextStyle.merge(
-                                  softWrap: true,
-                                  child: Text(
-                                    'HISTORIQUE',
-                                    style: FlutterFlowTheme.of(context).labelLarge.override(
-                                      fontFamily: 'Poppins',
-                                      color: FlutterFlowTheme.of(context).primaryBackground,
-                                      fontSize: 20.0,
-                                      letterSpacing: 0.0,
-                                    ),
-                                  ),
+                                        DataColumn2(
+                                          label: Text(
+                                            'numero de requete',
+                                            style: TextStyle(
+                                              color: FlutterFlowTheme.of(context).primaryBackground,
+                                            ),
+                                          ),
+                                        ),
+                                        DataColumn2(
+                                          label: Text(
+                                            'oeuvres',
+                                            style: TextStyle(
+                                              color: FlutterFlowTheme.of(context).primaryBackground,
+                                            ),
+                                          ),
+                                        ),
+                                        DataColumn2(
+                                          label: Text(
+                                            'Date',
+                                            style: TextStyle(
+                                              color: FlutterFlowTheme.of(context).primaryBackground,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                      dataRowBuilder: (historiqueItem, historiqueIndex, selected, onSelectChanged) => DataRow(
+                                        color: MaterialStateProperty.all(
+                                          historiqueIndex % 2 == 0 ? FlutterFlowTheme.of(context).secondaryBackground : FlutterFlowTheme.of(context).primaryBackground,
+                                        ),
+                                        cells: [
+                                          DataCell(
+                                            Text(
+                                              historiqueItem['numero de requete'].toString(),
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                          ),
+                                          DataCell(
+                                            Text(
+                                              historiqueItem['oeuvres'],
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                          ),
+                                          DataCell(
+                                            Text(
+                                              historiqueItem['Date'],
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      paginated: false,
+                                      selectable: false,
+                                      width: MediaQuery.of(context).size.width * 0.4,
+                                      height: MediaQuery.of(context).size.height * 0.4,
+                                      headingRowHeight: 56.0,
+                                      dataRowHeight: 48.0,
+                                      columnSpacing: 20.0,
+                                      headingRowColor: FlutterFlowTheme.of(context).primary,
+                                      borderRadius: BorderRadius.circular(8.0),
+                                      addHorizontalDivider: true,
+                                      addTopAndBottomDivider: false,
+                                      hideDefaultHorizontalDivider: true,
+                                      horizontalDividerColor: FlutterFlowTheme.of(context).secondaryBackground,
+                                      horizontalDividerThickness: 1.0,
+                                      addVerticalDivider: false,
+                                    );
+                                  },
                                 ),
                               ),
-                            ],
-                            dataRowBuilder: (derniersconsultesItem, derniersconsultesIndex, selected, onSelectChanged) => DataRow(
-                              color: MaterialStateProperty.all(
-                                derniersconsultesIndex % 2 == 0 ? FlutterFlowTheme.of(context).secondaryBackground : FlutterFlowTheme.of(context).primaryBackground,
-                              ),
-                              cells: [
-                                DataCell(
-                                  Text(
-                                    derniersconsultesItem,  // Utilisation de l'item de la liste pour la cellule
-                                    style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                      fontFamily: 'Poppins',
-                                      letterSpacing: 0.0,
-                                    ),
-                                  ),
-                                ),
-                              ],
                             ),
-                            paginated: false,
-                            selectable: false,
-                            width: MediaQuery.sizeOf(context).width * 0.4,
-                            height: MediaQuery.sizeOf(context).height * 0.4,
-                            headingRowHeight: 56.0,
-                            dataRowHeight: 48.0,
-                            columnSpacing: 20.0,
-                            headingRowColor: FlutterFlowTheme.of(context).primary,
-                            borderRadius: BorderRadius.circular(8.0),
-                            addHorizontalDivider: true,
-                            addTopAndBottomDivider: false,
-                            hideDefaultHorizontalDivider: true,
-                            horizontalDividerColor: FlutterFlowTheme.of(context).secondaryBackground,
-                            horizontalDividerThickness: 1.0,
-                            addVerticalDivider: false,
-                          );
-                        },
-                      ),
-                    ),
-                  ),
 
-      ]).animateOnPageLoad(
+
+                          ]).animateOnPageLoad(
                             animationsMap['columnOnPageLoadAnimation1']!),
                       ),
+
                       Align(
                         alignment: const AlignmentDirectional(0.14, 0.0),
                         child: Column(
@@ -319,7 +380,7 @@ class _DashboardWidgetState extends State<DashboardWidget>
                                       alignment:
                                           const AlignmentDirectional(-0.03, -0.43),
                                       child: GradientText(
-                                        '547',
+                                        '$sumOfViews',
                                         textAlign: TextAlign.center,
                                         style: FlutterFlowTheme.of(context)
                                             .bodyMedium
@@ -389,23 +450,16 @@ class _DashboardWidgetState extends State<DashboardWidget>
                                 child: Builder(
                                   builder: (context) {
                                     // Définition des données fixes
-                                    final derniersconsultes = [
-                                      "Consultation 1",
-                                      "Consultation 2",
-                                      "Consultation 3",
-                                      "Consultation 4",
-                                      "Consultation 5",
-                                    ];
 
-                                    return FlutterFlowDataTable<String>(
+                                    return FlutterFlowDataTable<Map<String, dynamic>>(
                                       controller: _model.paginatedDataTableController1,
-                                      data: derniersconsultes,
+                                      data: VueDataLouvres,
                                       columnsBuilder: (onSortChanged) => [
                                         DataColumn2(
                                           label: DefaultTextStyle.merge(
                                             softWrap: true,
                                             child: Text(
-                                              'HISTORIQUE',
+                                              'LES PLUS VUES',
                                               style: FlutterFlowTheme.of(context).labelLarge.override(
                                                 fontFamily: 'Poppins',
                                                 color: FlutterFlowTheme.of(context).primaryBackground,
@@ -416,14 +470,14 @@ class _DashboardWidgetState extends State<DashboardWidget>
                                           ),
                                         ),
                                       ],
-                                      dataRowBuilder: (derniersconsultesItem, derniersconsultesIndex, selected, onSelectChanged) => DataRow(
+                                      dataRowBuilder: (row, index, selected, onSelectChanged) => DataRow(
                                         color: MaterialStateProperty.all(
-                                          derniersconsultesIndex % 2 == 0 ? FlutterFlowTheme.of(context).secondaryBackground : FlutterFlowTheme.of(context).primaryBackground,
+                                          index % 2 == 0 ? FlutterFlowTheme.of(context).secondaryBackground : FlutterFlowTheme.of(context).primaryBackground,
                                         ),
                                         cells: [
                                           DataCell(
                                             Text(
-                                              derniersconsultesItem,  // Utilisation de l'item de la liste pour la cellule
+                                              '${row['oeuvres']} - ${row['nombresdevue']} vue${row['nombresdevue'] != 1 ? 's' : ''}',
                                               style: FlutterFlowTheme.of(context).bodyMedium.override(
                                                 fontFamily: 'Poppins',
                                                 letterSpacing: 0.0,

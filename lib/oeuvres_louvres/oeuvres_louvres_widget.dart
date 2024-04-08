@@ -26,7 +26,7 @@ class LouvresData {
     final jsonData = json.encode(clickData);
     print(jsonData);
     final response = await http.post(
-      Uri.parse('http://localhost:3000/save-click'),
+      Uri.parse('http://localhost:3000/save-click-louvres'),
       body: jsonData,
       headers: {'Content-Type': 'application/json'},
     );

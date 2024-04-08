@@ -21,13 +21,13 @@ class DashboardModel extends FlutterFlowModel<DashboardWidget> {
   final unfocusNode = FocusNode();
   // State field(s) for PaginatedDataTable widget.
   final paginatedDataTableController1 =
-      FlutterFlowDataTableController<String>();
+      FlutterFlowDataTableController<Map<String, dynamic>>();
   // State field(s) for DropDown widget.
   String? dropDownValue;
   FormFieldController<String>? dropDownValueController;
   // State field(s) for PaginatedDataTable widget.
   final paginatedDataTableController2 =
-      FlutterFlowDataTableController<String>();
+      FlutterFlowDataTableController<Map<String, dynamic>>();
 
   @override
   void initState(BuildContext context) {}

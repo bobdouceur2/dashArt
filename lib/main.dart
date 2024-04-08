@@ -60,7 +60,7 @@ class _MyAppState extends State<MyApp> {
 }
 Future<Map<String, String>> loadJsonImageLouvres() async {
   final response = await http.get(
-      Uri.parse('http://localhost:3000/image-links'));
+      Uri.parse('http://localhost:3000/image-links-louvres'));
 
   if (response.statusCode == 200) {
     final jsonData = response.body;
@@ -78,6 +78,30 @@ Future<Map<String, String>> loadJsonImageLouvres() async {
 
     return imagesMap;
   } else {
-    throw Exception('Failed to load ImageLinks.json');
+    throw Exception('Failed to load ImageLinksLouvres.json');
+  }
+}
+
+Future<Map<String, String>> loadJsonImageGuimet() async {
+  final response = await http.get(
+      Uri.parse('http://localhost:3000/image-links-guimet'));
+
+  if (response.statusCode == 200) {
+    final jsonData = response.body;
+    final List<dynamic> imagesData = json.decode(jsonData);
+
+    // Créer un Map pour stocker les titres et les liens
+    Map<String, String> imagesMap = {};
+
+    // Parcourir les données JSON et ajouter les titres et les liens au Map
+    imagesData.forEach((image) {
+      String titre = image['titre'];
+      String lien = image['lien'];
+      imagesMap[titre] = lien;
+    });
+
+    return imagesMap;
+  } else {
+    throw Exception('Failed to load ImageLinksGuimet.json');
   }
 }
