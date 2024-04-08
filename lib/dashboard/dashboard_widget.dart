@@ -27,6 +27,7 @@ class DashboardWidget extends StatefulWidget {
 
 class _DashboardWidgetState extends State<DashboardWidget>
     with TickerProviderStateMixin {
+  bool _isLoading = true;
   late DashboardModel _model;
 
   List<Map<String, dynamic>> historiqueDataLouvres = [];
@@ -81,6 +82,9 @@ class _DashboardWidgetState extends State<DashboardWidget>
     fetchVueDataLouvres();
   }
   void fetchHistoriqueDataLouvres() async {
+    setState(() {
+      _isLoading = true; // Show loading indicator
+    });
     try {
       final response = await http.get(Uri.parse('http://localhost:3000/last-requests-louvres'));
       if (response.statusCode == 200) {
@@ -88,16 +92,23 @@ class _DashboardWidgetState extends State<DashboardWidget>
         final List<Map<String, dynamic>> historiqueDataList = List<Map<String, dynamic>>.from(jsonData);
         setState(() {
           historiqueDataLouvres = historiqueDataList;
+          _isLoading = false; // Hide loading indicator
         });
       } else {
         print('Failed to load historiqueData');
       }
     } catch (e) {
       print('Error fetching historiqueData: $e');
+      setState(() {
+        _isLoading = false; // Hide loading indicator on error
+      });
     }
   }
 
   void fetchVueDataLouvres() async {
+    setState(() {
+      _isLoading = true; // Show loading indicator
+    });
     try {
       final response = await http.get(Uri.parse('http://localhost:3000/click-counter-louvres'));
       if (response.statusCode == 200) {
@@ -105,12 +116,16 @@ class _DashboardWidgetState extends State<DashboardWidget>
         final List<Map<String, dynamic>> clickcounter = List<Map<String, dynamic>>.from(jsonData);
         setState(() {
           VueDataLouvres = clickcounter;
+          _isLoading = false; // Hide loading indicator
         });
       } else {
         print('Failed to load clickcounter');
       }
     } catch (e) {
       print('Error fetching clickcounter: $e');
+      setState(() {
+        _isLoading = false; // Hide loading indicator on error
+      });
     }
   }
 
@@ -125,6 +140,13 @@ class _DashboardWidgetState extends State<DashboardWidget>
 
   @override
   Widget build(BuildContext context) {
+    // Build loading indicator if data is still loading
+    if (_isLoading) {
+      return Center(
+        child: CircularProgressIndicator(), // Or any other loading indicator widget
+      );
+    }
+
     final chartPieChartColorsList2 = [
       const Color(0xFF8F46E9),
       const Color(0xFF6F28CB),
@@ -231,7 +253,7 @@ class _DashboardWidgetState extends State<DashboardWidget>
                             ),
                             Expanded(
                               child: Padding(
-                                padding: const EdgeInsetsDirectional.fromSTEB(25.0, 0.0, 0.0, 0.0),
+                                padding: const EdgeInsetsDirectional.fromSTEB(40.0, 0.0, 0.0, 0.0),
                                 child: Builder(
                                   builder: (context) {
                                     return FlutterFlowDataTable<Map<String, dynamic>>(
@@ -328,7 +350,7 @@ class _DashboardWidgetState extends State<DashboardWidget>
                           children: [
                             Padding(
                               padding: const EdgeInsetsDirectional.fromSTEB(
-                                  60.0, 75.0, 0.0, 75.0),
+                                  60.0, 55.0, 0.0, 75.0),
                               child: Container(
                                 width: 300.0,
                                 height: 300.0,
@@ -404,7 +426,7 @@ class _DashboardWidgetState extends State<DashboardWidget>
                             ),
                             Padding(
                               padding: const EdgeInsetsDirectional.fromSTEB(
-                                  60.0, 0.0, 0.0, 10.0),
+                                  40.0, 0.0, 0.0, 10.0),
                               child: FlutterFlowDropDown<String>(
                                 controller: _model.dropDownValueController ??=
                                     FormFieldController<String>(null),
@@ -488,7 +510,7 @@ class _DashboardWidgetState extends State<DashboardWidget>
                                       ),
                                       paginated: false,
                                       selectable: false,
-                                      width: MediaQuery.sizeOf(context).width * 0.2,
+                                      width: 300,
                                       height: MediaQuery.sizeOf(context).height * 0.4,
                                       headingRowHeight: 56.0,
                                       dataRowHeight: 48.0,
@@ -523,7 +545,7 @@ class _DashboardWidgetState extends State<DashboardWidget>
                                     0.0, 30.0, 45.0, 0.0),
                                 child: SizedBox(
                                   width: 370.0,
-                                  height: 400.0,
+                                  height: 300.0,
                                   child: FlutterFlowPieChart(
                                     data: FFPieChartData(
                                       // Remplacez les valeurs générées aléatoirement par des valeurs fixes
