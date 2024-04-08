@@ -32,9 +32,16 @@ class _DashboardWidgetState extends State<DashboardWidget>
   bool _isLoading = true;
   late DashboardModel _model;
   List<Map<String, dynamic>> historiqueDataLouvres = [];
-  List<Map<String, dynamic>> VueDataLouvres = [];
   List<Map<String, dynamic>> historiqueDataGuimet = [];
+  List<Map<String, dynamic>> historiqueDataTotal = [];
+  List<Map<String, dynamic>> VueDataLouvres = [];
   List<Map<String, dynamic>> VueDataGuimet = [];
+  List<Map<String, dynamic>> VueDataTotal = [];
+  List<Map<String, dynamic>> selectedDataPie1 = [];
+  List<Map<String, dynamic>> selectedDataPie2 = [];
+  List<Map<String, dynamic>> selectedDataPie = [];
+  int sumOfViews = 0;
+
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -85,6 +92,8 @@ class _DashboardWidgetState extends State<DashboardWidget>
     fetchVueDataLouvres();
     fetchHistoriqueDataGuimet();
     fetchVueDataGuimet();
+    fetchDataAndCalculatePieChartDataLouvres();
+    fetchDataAndCalculatePieChartDataGuimet();
   }
   void fetchHistoriqueDataLouvres() async {
     setState(() {
@@ -180,6 +189,78 @@ class _DashboardWidgetState extends State<DashboardWidget>
     }
   }
 
+  void fetchDataAndCalculatePieChartDataLouvres() async {
+    setState(() {
+      _isLoading = true; // Show loading indicator
+    });
+    try {
+      final response = await http.get(Uri.parse('http://localhost:3000/image-links-louvres'));
+      if (response.statusCode == 200) {
+        final jsonData = json.decode(response.body);
+        // Initialize a map to count occurrences of each type
+        final Map<String, int> typeCounts = {};
+        // Iterate through the JSON data to count occurrences of each type
+        for (var entry in jsonData) {
+          final type = entry['type'] as String;
+          typeCounts[type] = (typeCounts[type] ?? 0) + 1;
+        }
+        int totalCount = typeCounts.values.reduce((value, element) => value + element);
+        // Convert the map into the required format
+        final List<Map<String, dynamic>> result = typeCounts.entries
+            .map((entry) => {'type': entry.key, 'pourcentage': (entry.value/totalCount)*100})
+            .toList();
+
+        setState(() {
+          _isLoading = false; // Hide loading indicator
+          selectedDataPie1 = result;
+        });
+      } else {
+        print('Failed to fetch image links');
+      }
+    } catch (e) {
+      print('Error fetching image links: $e');
+      setState(() {
+        _isLoading = false; // Hide loading indicator on error
+      });
+    }
+  }
+
+
+  void fetchDataAndCalculatePieChartDataGuimet() async {
+    setState(() {
+      _isLoading = true; // Show loading indicator
+    });
+    try {
+      final response = await http.get(Uri.parse('http://localhost:3000/image-links-guimet'));
+      if (response.statusCode == 200) {
+        final jsonData = json.decode(response.body);
+        // Initialize a map to count occurrences of each type
+        final Map<String, int> typeCounts = {};
+        // Iterate through the JSON data to count occurrences of each type
+        for (var entry in jsonData) {
+          final type = entry['type'] as String;
+          typeCounts[type] = (typeCounts[type] ?? 0) + 1;
+        }
+        int totalCount = typeCounts.values.reduce((value, element) => value + element);
+        // Convert the map into the required format
+        final List<Map<String, dynamic>> result = typeCounts.entries
+            .map((entry) => {'type': entry.key, 'pourcentage': (entry.value/totalCount)*100})
+            .toList();
+
+        setState(() {
+          _isLoading = false; // Hide loading indicator
+          selectedDataPie2 = result;
+        });
+      } else {
+        print('Failed to fetch image links');
+      }
+    } catch (e) {
+      print('Error fetching image links: $e');
+      setState(() {
+        _isLoading = false; // Hide loading indicator on error
+      });
+    }
+  }
 
   @override
   void dispose() {
@@ -209,7 +290,49 @@ class _DashboardWidgetState extends State<DashboardWidget>
       const Color(0xFF2536A4),
       const Color(0xFF4A57C1)
     ];
-    int sumOfViews = VueDataLouvres.map<int>((item) => item['nombresdevue'] as int).reduce((value, element) => value + element);
+    if (_model.dropDownValue == 'musée du Louvre') {
+      sumOfViews = VueDataLouvres.map<int>((item) => item['nombresdevue'] as int).reduce((value, element) => value + element);
+      selectedDataPie = selectedDataPie1;
+      print(selectedDataPie1);
+    } else if (_model.dropDownValue == 'musée Guimet') {
+      sumOfViews = VueDataGuimet.map<int>((item) => item['nombresdevue'] as int).reduce((value, element) => value + element);
+      selectedDataPie = selectedDataPie2;
+    } else if (_model.dropDownValue == 'Total') {
+      sumOfViews = VueDataGuimet.map<int>((item) => item['nombresdevue'] as int).reduce((value, element) => value + element) + VueDataLouvres.map<int>((item) => item['nombresdevue'] as int).reduce((value, element) => value + element);
+      Map<String, double> selectedDataMap = {};
+      // Iterate through selectedDataPie1
+      for (var data in selectedDataPie1) {
+        if (selectedDataMap.containsKey(data['type'])) {
+          // If type already exists in the map, update the percentage
+          selectedDataMap[data['type']] =
+              selectedDataMap[data['type']]! + data['pourcentage']! / 2;
+        } else {
+          // Otherwise, add the type to the map
+          selectedDataMap[data['type']] = data['pourcentage']! / 2;
+        }
+      }
+      // Iterate through selectedDataPie2
+      for (var data in selectedDataPie2) {
+        if (selectedDataMap.containsKey(data['type'])) {
+          // If type already exists in the map, update the percentage
+          selectedDataMap[data['type']] =
+              selectedDataMap[data['type']]! + data['pourcentage']! / 2;
+        } else {
+          // Otherwise, add the type to the map
+          selectedDataMap[data['type']] = data['pourcentage']! / 2;
+        }
+      }
+
+      // Construct selectedDataPie array from the map
+      List<Map<String, dynamic>> selectedDataPie3 = selectedDataMap.entries
+          .map((entry) => {'type': entry.key, 'pourcentage': entry.value})
+          .toList();
+      selectedDataPie = selectedDataPie3;
+    }
+
+
+
+
     return GestureDetector(
       onTap: () => _model.unfocusNode.canRequestFocus
           ? FocusScope.of(context).requestFocus(_model.unfocusNode)
@@ -248,7 +371,7 @@ class _DashboardWidgetState extends State<DashboardWidget>
                   Stack(
                     children: [
                       Align(
-                        alignment: const AlignmentDirectional(0.0, 0.0),
+                        alignment: AlignmentDirectional(0.0, 0.0),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -259,51 +382,87 @@ class _DashboardWidgetState extends State<DashboardWidget>
                               child: Padding(
                                 padding: const EdgeInsetsDirectional.fromSTEB(
                                     25.0, 50.0, 0.0, 50.0),
-                                child: SizedBox(
+                                child: Container(
                                   width: MediaQuery.sizeOf(context).width * 0.4,
                                   height:
                                       MediaQuery.sizeOf(context).height * 0.5,
-                                  child: FlutterFlowLineChart(
-                                    data: [
-                                  FFLineChartData(
-                                  xData: [1, 2, 3, 4, 5],  // Valeurs fixes pour l'axe X
-                                    yData: [10, 20, 30, 40, 50],  // Valeurs fixes pour l'axe Y
-                                    settings: LineChartBarData(
-                                      color: FlutterFlowTheme.of(context).primary,
-                                    ),
-                                  ),
-                                    // Ajoutez d'autres FFLineChartData si nécessaire
+                                  child: Stack(
+                                    children: [
+                                      FlutterFlowLineChart(
+                                        data: [
+                                          FFLineChartData(
+                                            xData: [1, 2, 3, 4, 5],  // Valeurs fixes pour l'axe X
+                                            yData: [10, 20, 30, 40, 50],  // Valeurs fixes pour l'axe Y
+                                            settings: LineChartBarData(
+                                              color: FlutterFlowTheme.of(context).primary,
+                                            ),
+                                          ),
+                                            // Ajoutez d'autres FFLineChartData si nécessaire
+                                        ],
+                                        chartStylingInfo: ChartStylingInfo(
+                                          backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
+                                          borderColor: FlutterFlowTheme.of(context).secondaryText,
+                                          borderWidth: 1.0,
+                                        ),
+                                        axisBounds: const AxisBounds(),
+                                        xAxisLabelInfo: const AxisLabelInfo(
+                                          title: 'JOURS',
+                                          titleTextStyle: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20.0,
+                                          ),
+                                          showLabels: true,
+                                          labelInterval: 10,
+                                        ),
+                                        yAxisLabelInfo: const AxisLabelInfo(
+                                          title: 'NOMBRE DE VUES',
+                                          titleTextStyle: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20.0,
+                                          ),
+                                        ),
+                                      ),
+                                      Align(
+                                        alignment: AlignmentDirectional(0.6, 0.5),
+                                        child: FlutterFlowChartLegendWidget(
+                                          entries: [
+                                            LegendEntry(
+                                                FlutterFlowTheme.of(context)
+                                                    .primary,
+                                                'Joconde'),
+                                            LegendEntry(Color(0xFF6F28CB),
+                                                'Victoire de Samothrace'),
+                                            LegendEntry(Color(0xFF2536A4),
+                                                'Vénus de Milo'),
+                                          ],
+                                          width: 100,
+                                          height: 50,
+                                          textStyle:
+                                          FlutterFlowTheme.of(context)
+                                              .bodyMedium
+                                              .override(
+                                            fontFamily: 'Poppins',
+                                            letterSpacing: 0,
+                                          ),
+                                          textPadding:
+                                          EdgeInsetsDirectional.fromSTEB(
+                                              5, 0, 0, 0),
+                                          padding:
+                                          EdgeInsetsDirectional.fromSTEB(
+                                              5, 0, 5, 0),
+                                          borderWidth: 1,
+                                          borderColor: Colors.black,
+                                          indicatorSize: 10,
+                                        ),
+                                      ),
                                     ],
-
-                                    chartStylingInfo: ChartStylingInfo(
-                                      backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
-                                      borderColor: FlutterFlowTheme.of(context).secondaryText,
-                                      borderWidth: 1.0,
-                                    ),
-                                    axisBounds: const AxisBounds(),
-                                    xAxisLabelInfo: const AxisLabelInfo(
-                                      title: 'JOURS',
-                                      titleTextStyle: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20.0,
-                                      ),
-                                      showLabels: true,
-                                      //labelInterval: 10,
-                                    ),
-                                    yAxisLabelInfo: const AxisLabelInfo(
-                                      title: 'NOMBRE DE VUES',
-                                      titleTextStyle: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20.0,
-                                      ),
-                                    ),
                                   ),
                                 ),
                               ),
                             ),
                             Expanded(
                               child: Padding(
-                                padding: const EdgeInsetsDirectional.fromSTEB(40.0, 0.0, 0.0, 0.0),
+                                padding: const EdgeInsetsDirectional.fromSTEB(25.0, 0.0, 0.0, 0.0),
                                 child: Builder(
                                   builder: (context) {
                                     List<Map<String, dynamic>> selectedData = [];
@@ -393,20 +552,18 @@ class _DashboardWidgetState extends State<DashboardWidget>
                                 ),
                               ),
                             ),
-
-
-                          ]).animateOnPageLoad(
+                          ]
+                        ).animateOnPageLoad(
                             animationsMap['columnOnPageLoadAnimation1']!),
                       ),
-
                       Align(
-                        alignment: const AlignmentDirectional(0.14, 0.0),
+                        alignment:  AlignmentDirectional(0.14, 0.0),
                         child: Column(
                           mainAxisSize: MainAxisSize.max,
                           children: [
                             Padding(
                               padding: const EdgeInsetsDirectional.fromSTEB(
-                                  60.0, 55.0, 0.0, 75.0),
+                                  50.0, 75.0, 0.0, 75.0),
                               child: Container(
                                 width: 300.0,
                                 height: 300.0,
@@ -481,8 +638,8 @@ class _DashboardWidgetState extends State<DashboardWidget>
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsetsDirectional.fromSTEB(
-                                  40.0, 0.0, 0.0, 10.0),
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  50.0, 0.0, 0.0, 10.0),
                               child: FlutterFlowDropDown<String>(
                                 controller: _model.dropDownValueController ??=
                                     FormFieldController<String>('Total'),
@@ -595,49 +752,97 @@ class _DashboardWidgetState extends State<DashboardWidget>
                             animationsMap['columnOnPageLoadAnimation2']!),
                       ),
                       Align(
-                        alignment: const AlignmentDirectional(0.0, 0.0),
+                        alignment: AlignmentDirectional(0.0, 0.0),
                         child: Column(
                           mainAxisSize: MainAxisSize.max,
                           children: [
                             Align(
-                              alignment: const AlignmentDirectional(1.0, -1.0),
+                              alignment: AlignmentDirectional(1.0, -1.0),
                               child: Padding(
-                                padding: const EdgeInsetsDirectional.fromSTEB(
+                                padding: EdgeInsetsDirectional.fromSTEB(
                                     0.0, 30.0, 45.0, 0.0),
-                                child: SizedBox(
+                                child: Container(
                                   width: 370.0,
-                                  height: 300.0,
-                                  child: FlutterFlowPieChart(
-                                    data: FFPieChartData(
-                                      // Remplacez les valeurs générées aléatoirement par des valeurs fixes
-                                      values: [10, 20, 30, 40, 50],
-                                      colors: chartPieChartColorsList2,
-                                      radius: [100.0],
-                                    ),
-                                    donutHoleRadius: 70.0,
-                                    donutHoleColor: Colors.transparent,
-                                    sectionLabelType:
-                                        PieChartSectionLabelType.value,
-                                    sectionLabelStyle:
-                                        FlutterFlowTheme.of(context)
-                                            .headlineSmall
-                                            .override(
-                                              fontFamily: 'Poppins',
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .primaryBackground,
-                                              letterSpacing: 0.0,
+                                  height: 400.0,
+                                  child: Stack(
+                                    children: [
+                                      FlutterFlowPieChart(
+                                        data: FFPieChartData(
+                                          values: selectedDataPie.map((data) => data['pourcentage'] as double).toList(),
+                                          colors: chartPieChartColorsList2,
+                                          radius: [100.0],
+                                        ),
+                                        donutHoleRadius: 70.0,
+                                        donutHoleColor: Colors.transparent,
+                                        sectionLabelType:
+                                            PieChartSectionLabelType.percent,
+                                        sectionLabelStyle:
+                                            FlutterFlowTheme.of(context)
+                                                .headlineSmall
+                                                .override(
+                                                  fontFamily: 'Poppins',
+                                                  color:
+                                                      FlutterFlowTheme.of(context)
+                                                          .primaryBackground,
+                                                  letterSpacing: 0.0,
+                                                ),
+                                      ),
+                                      Align(
+                                        alignment: AlignmentDirectional(1.0, 1.0),
+                                        child: FlutterFlowChartLegendWidget(
+                                          entries: List.generate(
+                                              random_data.randomInteger(
+                                                  0, 0),
+                                                  (index) =>
+                                                  random_data.randomString(
+                                                    1,
+                                                    10,
+                                                    true,
+                                                    false,
+                                                    false,
+                                                  ))
+                                              .asMap()
+                                              .entries
+                                              .map(
+                                                (label) => LegendEntry(
+                                              chartPieChartColorsList2[label
+                                                  .key %
+                                                  chartPieChartColorsList2
+                                                      .length],
+                                              label.value,
                                             ),
+                                          )
+                                              .toList(),
+                                          width: 100,
+                                          height: 50,
+                                          textStyle:
+                                          FlutterFlowTheme.of(context)
+                                              .bodyMedium
+                                              .override(
+                                            fontFamily: 'Poppins',
+                                            letterSpacing: 0,
+                                          ),
+                                          textPadding:
+                                          EdgeInsetsDirectional.fromSTEB(
+                                              5, 0, 0, 0),
+                                          padding:
+                                          EdgeInsetsDirectional.fromSTEB(
+                                              5, 0, 5, 0),
+                                          borderWidth: 1,
+                                          borderColor: Colors.black,
+                                          indicatorSize: 10,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
                             ),
                             Align(
-                              alignment: const AlignmentDirectional(1.0, -1.0),
+                              alignment: AlignmentDirectional(1, -1),
                               child: Padding(
-                                padding: const EdgeInsetsDirectional.fromSTEB(
-                                    0.0, 40.0, 45.0, 0.0),
-                                child: SizedBox(
+                                padding:  EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 45.0, 0.0),
+                                child: Container(
                                   width: 370.0,
                                   height: 400.0,
                                   child: FlutterFlowPieChart(
@@ -650,7 +855,7 @@ class _DashboardWidgetState extends State<DashboardWidget>
                                     donutHoleRadius: 70.0,
                                     donutHoleColor: Colors.transparent,
                                     sectionLabelType:
-                                        PieChartSectionLabelType.value,
+                                        PieChartSectionLabelType.percent,
                                     sectionLabelStyle:
                                         FlutterFlowTheme.of(context)
                                             .headlineSmall
