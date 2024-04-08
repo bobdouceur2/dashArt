@@ -1,3 +1,5 @@
+import 'package:dash_art/oeuvres_louvres/oeuvres_louvres_widget.dart';
+
 import '/flutter_flow/flutter_flow_animations.dart';
 import '/flutter_flow/flutter_flow_charts.dart';
 import '/flutter_flow/flutter_flow_data_table.dart';
@@ -29,9 +31,10 @@ class _DashboardWidgetState extends State<DashboardWidget>
     with TickerProviderStateMixin {
   bool _isLoading = true;
   late DashboardModel _model;
-
   List<Map<String, dynamic>> historiqueDataLouvres = [];
   List<Map<String, dynamic>> VueDataLouvres = [];
+  List<Map<String, dynamic>> historiqueDataGuimet = [];
+  List<Map<String, dynamic>> VueDataGuimet = [];
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -80,6 +83,8 @@ class _DashboardWidgetState extends State<DashboardWidget>
     _model = createModel(context, () => DashboardModel());
     fetchHistoriqueDataLouvres();
     fetchVueDataLouvres();
+    fetchHistoriqueDataGuimet();
+    fetchVueDataGuimet();
   }
   void fetchHistoriqueDataLouvres() async {
     setState(() {
@@ -92,6 +97,29 @@ class _DashboardWidgetState extends State<DashboardWidget>
         final List<Map<String, dynamic>> historiqueDataList = List<Map<String, dynamic>>.from(jsonData);
         setState(() {
           historiqueDataLouvres = historiqueDataList;
+          _isLoading = false; // Hide loading indicator
+        });
+      } else {
+        print('Failed to load historiqueData');
+      }
+    } catch (e) {
+      print('Error fetching historiqueData: $e');
+      setState(() {
+        _isLoading = false; // Hide loading indicator on error
+      });
+    }
+  }
+  void fetchHistoriqueDataGuimet() async {
+    setState(() {
+      _isLoading = true; // Show loading indicator
+    });
+    try {
+      final response = await http.get(Uri.parse('http://localhost:3000/last-requests-guimet'));
+      if (response.statusCode == 200) {
+        final jsonData = json.decode(response.body);
+        final List<Map<String, dynamic>> historiqueDataList = List<Map<String, dynamic>>.from(jsonData);
+        setState(() {
+          historiqueDataGuimet = historiqueDataList;
           _isLoading = false; // Hide loading indicator
         });
       } else {
@@ -128,7 +156,29 @@ class _DashboardWidgetState extends State<DashboardWidget>
       });
     }
   }
-
+  void fetchVueDataGuimet() async {
+    setState(() {
+      _isLoading = true; // Show loading indicator
+    });
+    try {
+      final response = await http.get(Uri.parse('http://localhost:3000/click-counter-guimet'));
+      if (response.statusCode == 200) {
+        final jsonData = json.decode(response.body);
+        final List<Map<String, dynamic>> clickcounter = List<Map<String, dynamic>>.from(jsonData);
+        setState(() {
+          VueDataGuimet = clickcounter;
+          _isLoading = false; // Hide loading indicator
+        });
+      } else {
+        print('Failed to load clickcounter');
+      }
+    } catch (e) {
+      print('Error fetching clickcounter: $e');
+      setState(() {
+        _isLoading = false; // Hide loading indicator on error
+      });
+    }
+  }
 
 
   @override
@@ -256,9 +306,15 @@ class _DashboardWidgetState extends State<DashboardWidget>
                                 padding: const EdgeInsetsDirectional.fromSTEB(40.0, 0.0, 0.0, 0.0),
                                 child: Builder(
                                   builder: (context) {
+                                    List<Map<String, dynamic>> selectedData = [];
+                                    if (_model.dropDownValue == 'musée du Louvre') {
+                                      selectedData = historiqueDataLouvres;
+                                    } else if (_model.dropDownValue == 'musée Guimet') {
+                                      selectedData = historiqueDataGuimet;
+                                    }
                                     return FlutterFlowDataTable<Map<String, dynamic>>(
                                       controller: _model.paginatedDataTableController2,
-                                      data: historiqueDataLouvres,
+                                      data: selectedData,
                                       columnsBuilder: (onSortChanged) => [
 
                                         DataColumn2(
@@ -429,13 +485,13 @@ class _DashboardWidgetState extends State<DashboardWidget>
                                   40.0, 0.0, 0.0, 10.0),
                               child: FlutterFlowDropDown<String>(
                                 controller: _model.dropDownValueController ??=
-                                    FormFieldController<String>(null),
+                                    FormFieldController<String>('Total'),
                                 options: const [
-                                  '... au musée du Louvre',
-                                  '... au musée du Quai Branly'
+                                  'Total',
+                                  'musée du Louvre',
+                                  'musée Guimet'
                                 ],
-                                onChanged: (val) =>
-                                    setState(() => _model.dropDownValue = val),
+                                onChanged: (val) => setState(() => _model.dropDownValue = val),
                                 width: 300.0,
                                 height: 56.0,
                                 textStyle: FlutterFlowTheme.of(context)
@@ -444,7 +500,7 @@ class _DashboardWidgetState extends State<DashboardWidget>
                                       fontFamily: 'Poppins',
                                       letterSpacing: 0.0,
                                     ),
-                                hintText: 'TOP 5 des plus vus...',
+                                hintText: 'Total',
                                 icon: Icon(
                                   Icons.keyboard_arrow_down_rounded,
                                   color: FlutterFlowTheme.of(context)
@@ -462,7 +518,7 @@ class _DashboardWidgetState extends State<DashboardWidget>
                                     16.0, 4.0, 16.0, 4.0),
                                 hidesUnderline: true,
                                 isOverButton: true,
-                                isSearchable: false,
+                                isSearchable: true,
                                 isMultiSelect: false,
                               ),
                             ),
@@ -471,11 +527,16 @@ class _DashboardWidgetState extends State<DashboardWidget>
                                 padding: const EdgeInsetsDirectional.fromSTEB(60.0, 20.0, 0.0, 0.0),
                                 child: Builder(
                                   builder: (context) {
+                                    List<Map<String, dynamic>> selectedData = [];
+                                    if (_model.dropDownValue == 'musée du Louvre') {
+                                      selectedData = VueDataLouvres;
+                                    } else if (_model.dropDownValue == 'musée Guimet') {
+                                      selectedData = VueDataGuimet;
+                                    }
                                     // Définition des données fixes
-
                                     return FlutterFlowDataTable<Map<String, dynamic>>(
                                       controller: _model.paginatedDataTableController1,
-                                      data: VueDataLouvres,
+                                      data: selectedData,
                                       columnsBuilder: (onSortChanged) => [
                                         DataColumn2(
                                           label: DefaultTextStyle.merge(
