@@ -964,14 +964,22 @@ class _DashboardWidgetState extends State<DashboardWidget>
                                       Align(
                                         alignment: AlignmentDirectional(1.0, 1.0),
                                         child: FlutterFlowChartLegendWidget(
-                                          entries: FirstPieDataSelector.map((data) {
+                                          entries:[
+                                          // Title entry
+                                          LegendEntry(
+                                          Colors.transparent,
+                                          "Pourcentage par type",
+                                          ),
+                                          ...FirstPieDataSelector.map((data) {
                                             final String type = data['type'] as String;
                                             final Color color = chartPieChartColorsList2[FirstPieDataSelector.indexOf(data) % chartPieChartColorsList2.length];
+                                            //final String Text = "Pourcentage de type d'oeuvre";
                                             return LegendEntry(
                                               color,
                                               type,
                                             );
                                           }).toList(),
+                                          ],
                                           width: 100,
                                           height: 50,
                                           textStyle: FlutterFlowTheme.of(context).bodyMedium.override(
@@ -1018,7 +1026,13 @@ class _DashboardWidgetState extends State<DashboardWidget>
                                       Align(
                                         alignment: AlignmentDirectional(1.0, 1.0),
                                         child: FlutterFlowChartLegendWidget(
-                                          entries: SecondPieDataSelector.map((data) {
+                                          entries: [
+                                          // Title entry
+                                          LegendEntry(
+                                          Colors.transparent,
+                                          "Vue par type",
+                                          ),
+                                          ...SecondPieDataSelector.map((data) {
                                             final String type = data['type'] as String;
                                             final Color color = chartPieChartColorsList2[SecondPieDataSelector.indexOf(data) % chartPieChartColorsList2.length];
                                             return LegendEntry(
@@ -1026,6 +1040,7 @@ class _DashboardWidgetState extends State<DashboardWidget>
                                               type,
                                             );
                                           }).toList(),
+                                          ],
                                           width: 100,
                                           height: 50,
                                           textStyle: FlutterFlowTheme.of(context).bodyMedium.override(
