@@ -91,6 +91,7 @@ class _DashboardWidgetState extends State<DashboardWidget>
   void initState() {
     super.initState();
     _model = createModel(context, () => DashboardModel());
+
     fetchHistoriqueDataLouvres();
     fetchHistoriqueDataGuimet();
     fetchHistoriqueDataTotal();
