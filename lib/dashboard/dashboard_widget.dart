@@ -44,7 +44,7 @@ class _DashboardWidgetState extends State<DashboardWidget>
   List<Map<String, dynamic>> selectedData1 = [];
   List<Map<String, dynamic>> selectedData2 = [];
   int sumOfViews = 0;
-
+  String dropDownValueController = 'Total';
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -99,7 +99,7 @@ class _DashboardWidgetState extends State<DashboardWidget>
     fetchVueDataTotal();
     fetchDataAndCalculatePieChartDataLouvres();
     fetchDataAndCalculatePieChartDataGuimet();
-    _model.dropDownValueController = FormFieldController<String>('Total');
+
   }
   void fetchHistoriqueDataLouvres() async {
     setState(() {
@@ -694,7 +694,7 @@ class _DashboardWidgetState extends State<DashboardWidget>
                               padding: EdgeInsetsDirectional.fromSTEB(
                                   50.0, 0.0, 0.0, 10.0),
                               child: FlutterFlowDropDown<String>(
-                                controller: _model.dropDownValueController ??= FormFieldController<String>('Total'),
+                                controller: _model.dropDownValueController ??= FormFieldController<String>(_model.dropDownValue = 'Total'),
                                 options: const [
                                   'Total',
                                   'musée du Louvre',
