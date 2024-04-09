@@ -29,6 +29,7 @@ class DashboardWidget extends StatefulWidget {
 
 class _DashboardWidgetState extends State<DashboardWidget>
     with TickerProviderStateMixin {
+
   bool _isLoading = true;
   late DashboardModel _model;
   List<Map<String, dynamic>> historiqueDataLouvres = [];
@@ -40,6 +41,8 @@ class _DashboardWidgetState extends State<DashboardWidget>
   List<Map<String, dynamic>> selectedDataPie1 = [];
   List<Map<String, dynamic>> selectedDataPie2 = [];
   List<Map<String, dynamic>> selectedDataPie = [];
+  List<Map<String, dynamic>> selectedData1 = [];
+  List<Map<String, dynamic>> selectedData2 = [];
   int sumOfViews = 0;
 
 
@@ -89,11 +92,14 @@ class _DashboardWidgetState extends State<DashboardWidget>
     super.initState();
     _model = createModel(context, () => DashboardModel());
     fetchHistoriqueDataLouvres();
-    fetchVueDataLouvres();
     fetchHistoriqueDataGuimet();
+    fetchHistoriqueDataTotal();
     fetchVueDataGuimet();
+    fetchVueDataLouvres();
+    fetchVueDataTotal();
     fetchDataAndCalculatePieChartDataLouvres();
     fetchDataAndCalculatePieChartDataGuimet();
+    _model.dropDownValueController = FormFieldController<String>('Total');
   }
   void fetchHistoriqueDataLouvres() async {
     setState(() {
@@ -136,6 +142,29 @@ class _DashboardWidgetState extends State<DashboardWidget>
       }
     } catch (e) {
       print('Error fetching historiqueData: $e');
+      setState(() {
+        _isLoading = false; // Hide loading indicator on error
+      });
+    }
+  }
+  void fetchHistoriqueDataTotal() async {
+    setState(() {
+      _isLoading = true; // Show loading indicator
+    });
+    try {
+      final response = await http.get(Uri.parse('http://localhost:3000/last-requests-total'));
+      if (response.statusCode == 200) {
+        final jsonData = json.decode(response.body);
+        final List<Map<String, dynamic>> historiqueDataList = List<Map<String, dynamic>>.from(jsonData);
+        setState(() {
+          historiqueDataTotal = historiqueDataList;
+          _isLoading = false; // Hide loading indicator
+        });
+      } else {
+        print('Failed to load historique Data');
+      }
+    } catch (e) {
+      print('Error fetching historique Data: $e');
       setState(() {
         _isLoading = false; // Hide loading indicator on error
       });
@@ -188,6 +217,30 @@ class _DashboardWidgetState extends State<DashboardWidget>
       });
     }
   }
+  void fetchVueDataTotal() async {
+    setState(() {
+      _isLoading = true; // Show loading indicator
+    });
+    try {
+      final response = await http.get(Uri.parse('http://localhost:3000/click-counter-total'));
+      if (response.statusCode == 200) {
+        final jsonData = json.decode(response.body);
+        final List<Map<String, dynamic>> clickcounter = List<Map<String, dynamic>>.from(jsonData);
+        setState(() {
+          VueDataTotal = clickcounter;
+          _isLoading = false; // Hide loading indicator
+        });
+      } else {
+        print('Failed to load clickcounter');
+      }
+    } catch (e) {
+      print('Error fetching clickcounter: $e');
+      setState(() {
+        _isLoading = false; // Hide loading indicator on error
+      });
+    }
+  }
+
 
   void fetchDataAndCalculatePieChartDataLouvres() async {
     setState(() {
@@ -292,12 +345,17 @@ class _DashboardWidgetState extends State<DashboardWidget>
     ];
     if (_model.dropDownValue == 'musée du Louvre') {
       sumOfViews = VueDataLouvres.map<int>((item) => item['nombresdevue'] as int).reduce((value, element) => value + element);
+      selectedData1 = historiqueDataLouvres;
+      selectedData2 = VueDataLouvres;
       selectedDataPie = selectedDataPie1;
-      print(selectedDataPie1);
     } else if (_model.dropDownValue == 'musée Guimet') {
       sumOfViews = VueDataGuimet.map<int>((item) => item['nombresdevue'] as int).reduce((value, element) => value + element);
+      selectedData1 = historiqueDataGuimet;
+      selectedData2 = VueDataGuimet;
       selectedDataPie = selectedDataPie2;
     } else if (_model.dropDownValue == 'Total') {
+      selectedData1 = historiqueDataTotal;
+      selectedData2 = VueDataTotal;
       sumOfViews = VueDataGuimet.map<int>((item) => item['nombresdevue'] as int).reduce((value, element) => value + element) + VueDataLouvres.map<int>((item) => item['nombresdevue'] as int).reduce((value, element) => value + element);
       Map<String, double> selectedDataMap = {};
       // Iterate through selectedDataPie1
@@ -465,15 +523,9 @@ class _DashboardWidgetState extends State<DashboardWidget>
                                 padding: const EdgeInsetsDirectional.fromSTEB(25.0, 0.0, 0.0, 0.0),
                                 child: Builder(
                                   builder: (context) {
-                                    List<Map<String, dynamic>> selectedData = [];
-                                    if (_model.dropDownValue == 'musée du Louvre') {
-                                      selectedData = historiqueDataLouvres;
-                                    } else if (_model.dropDownValue == 'musée Guimet') {
-                                      selectedData = historiqueDataGuimet;
-                                    }
                                     return FlutterFlowDataTable<Map<String, dynamic>>(
                                       controller: _model.paginatedDataTableController2,
-                                      data: selectedData,
+                                      data: selectedData1,
                                       columnsBuilder: (onSortChanged) => [
 
                                         DataColumn2(
@@ -637,12 +689,12 @@ class _DashboardWidgetState extends State<DashboardWidget>
                                 ),
                               ),
                             ),
+
                             Padding(
                               padding: EdgeInsetsDirectional.fromSTEB(
                                   50.0, 0.0, 0.0, 10.0),
                               child: FlutterFlowDropDown<String>(
-                                controller: _model.dropDownValueController ??=
-                                    FormFieldController<String>('Total'),
+                                controller: _model.dropDownValueController ??= FormFieldController<String>('Total'),
                                 options: const [
                                   'Total',
                                   'musée du Louvre',
@@ -684,16 +736,10 @@ class _DashboardWidgetState extends State<DashboardWidget>
                                 padding: const EdgeInsetsDirectional.fromSTEB(60.0, 20.0, 0.0, 0.0),
                                 child: Builder(
                                   builder: (context) {
-                                    List<Map<String, dynamic>> selectedData = [];
-                                    if (_model.dropDownValue == 'musée du Louvre') {
-                                      selectedData = VueDataLouvres;
-                                    } else if (_model.dropDownValue == 'musée Guimet') {
-                                      selectedData = VueDataGuimet;
-                                    }
                                     // Définition des données fixes
                                     return FlutterFlowDataTable<Map<String, dynamic>>(
                                       controller: _model.paginatedDataTableController1,
-                                      data: selectedData,
+                                      data: selectedData2,
                                       columnsBuilder: (onSortChanged) => [
                                         DataColumn2(
                                           label: DefaultTextStyle.merge(
