@@ -1,5 +1,5 @@
 import 'package:dash_art/oeuvres_louvres/oeuvres_louvres_widget.dart';
-
+import 'package:fl_chart/fl_chart.dart';
 import '/flutter_flow/flutter_flow_animations.dart';
 import '/flutter_flow/flutter_flow_charts.dart';
 import '/flutter_flow/flutter_flow_data_table.dart';
@@ -46,9 +46,14 @@ class _DashboardWidgetState extends State<DashboardWidget>
   List<Map<String, dynamic>> SecondPieDataLouvres = [];
   List<Map<String, dynamic>> SecondPieDataGuimet = [];
   List<Map<String, dynamic>> SecondPieDataSelector = [];
-  List<Map<String, dynamic>> LineDataLouvres = [];
-  List<Map<String, dynamic>> LineDataGuimet = [];
-  List<Map<String, dynamic>> LineDataSelector = [];
+  List<List<DateTime>> xSelector = [];
+  List<List<int>> ySelector = [];
+  List<List<DateTime>> xLouvres = [];
+  List<List<int>> yLouvres = [];
+  List<List<DateTime>> xGuimet = [];
+  List<List<int>> yGuimet = [];
+
+
   int sumOfViews = 0;
   String dropDownValueController = 'Total';
 
@@ -108,6 +113,8 @@ class _DashboardWidgetState extends State<DashboardWidget>
     fetchCalculateFirstPieDataGuimet();
     fetchAndCountClickSecondPieLouvres();
     fetchAndCountClickSecondPieGuimet();
+    fetchLineDataLouvres();
+    fetchLineDataGuimet();
 
   }
   void fetchHistoriqueDataLouvres() async {
@@ -427,6 +434,72 @@ class _DashboardWidgetState extends State<DashboardWidget>
   }
 
 
+  void fetchLineDataLouvres() async {
+    final response = await http.get(Uri.parse('http://localhost:3000/timestamps-louvres'));
+
+    if (response.statusCode == 200) {
+      final dataMap = json.decode(response.body);
+      int counter = 0;
+      dataMap.forEach((art, timestamps) {
+        if (counter < 5) {
+          counter++;
+          // Map to hold count of timestamps for each date
+          final Map<DateTime, int> timestampCounts = {};
+          // Convert timestamps to DateTime objects and count occurrences for each date
+          timestamps.map((timestamp) =>
+              DateTime.fromMillisecondsSinceEpoch(timestamp).toLocal()).forEach((
+              dateTime) {
+            final date = DateTime(dateTime.year, dateTime.month, dateTime.day);
+            timestampCounts.update(
+                date, (value) => value + 1, ifAbsent: () => 1);
+          });
+
+          // Prepare X data (dates) and Y data (counts) for the art
+          final List<DateTime> xData = timestampCounts.keys.toList();
+          final List<int> yData = timestampCounts.values.toList();
+
+          // Add xData and yData to the selector lists
+          xLouvres.add(xData);
+          yLouvres.add(yData);
+        }
+      });
+    } else {
+      throw Exception('Failed to fetch data');
+    }
+  }
+  void fetchLineDataGuimet() async {
+    final response = await http.get(Uri.parse('http://localhost:3000/timestamps-guimet'));
+
+    if (response.statusCode == 200) {
+      final dataMap = json.decode(response.body);
+      int counter = 0;
+      dataMap.forEach((art, timestamps) {
+        if (counter < 5) {
+          counter++;
+          // Map to hold count of timestamps for each date
+          final Map<DateTime, int> timestampCounts = {};
+          // Convert timestamps to DateTime objects and count occurrences for each date
+          timestamps.map((timestamp) =>
+              DateTime.fromMillisecondsSinceEpoch(timestamp)).forEach((
+              dateTime) {
+            timestampCounts.update(
+                dateTime, (value) => value + 1, ifAbsent: () => 1);
+          });
+
+          // Prepare X data (dates) and Y data (counts) for the art
+          final List<DateTime> xData = timestampCounts.keys.toList();
+          final List<int> yData = timestampCounts.values.toList();
+
+          // Add xData and yData to the selector lists
+          xGuimet.add(xData);
+          yGuimet.add(yData);
+        }
+      });
+    } else {
+      throw Exception('Failed to fetch data');
+    }
+  }
+
 
 
   @override
@@ -457,10 +530,6 @@ class _DashboardWidgetState extends State<DashboardWidget>
       const Color(0xFF2536A4),
       const Color(0xFF4A57C1)
     ];
-    print(FirstPieDataLouvres);
-    print(FirstPieDataGuimet);
-    print(SecondPieDataLouvres);
-    print(SecondPieDataGuimet);
 
     void updateSelectedDataMap(List<Map<String, dynamic>> data, Map<String, double> selectedDataMap) {
       for (var dataPoint in data) {
@@ -479,12 +548,20 @@ class _DashboardWidgetState extends State<DashboardWidget>
       selectedData2 = VueDataLouvres;
       FirstPieDataSelector = FirstPieDataLouvres;
       SecondPieDataSelector = SecondPieDataLouvres;
+      xSelector=xLouvres;
+      ySelector=yLouvres;
+      print(xSelector);
+      print(ySelector);
     } else if (_model.dropDownValue == 'musée Guimet') {
       sumOfViews = VueDataGuimet.map<int>((item) => item['nombresdevue'] as int).reduce((value, element) => value + element);
       selectedData1 = historiqueDataGuimet;
       selectedData2 = VueDataGuimet;
       FirstPieDataSelector = FirstPieDataGuimet;
       SecondPieDataSelector = SecondPieDataGuimet;
+      xSelector=xGuimet;
+      ySelector=yGuimet;
+      print(xSelector);
+      print(ySelector);
     } else if (_model.dropDownValue == 'Total') {
       selectedData1 = historiqueDataTotal;
       selectedData2 = VueDataTotal;
@@ -514,6 +591,8 @@ class _DashboardWidgetState extends State<DashboardWidget>
           ..sort((a, b) => a['type'].compareTo(b['type']));
       FirstPieDataSelector = result1 ;
       SecondPieDataSelector = result2 ;
+      xSelector=xLouvres;
+      ySelector=yLouvres;
 
     }
 
@@ -577,13 +656,13 @@ class _DashboardWidgetState extends State<DashboardWidget>
                                       FlutterFlowLineChart(
                                         data: [
                                           FFLineChartData(
-                                            xData: [1, 2, 3, 4, 5],  // Valeurs fixes pour l'axe X
-                                            yData: [10, 20, 30, 40, 50],  // Valeurs fixes pour l'axe Y
+                                            xData: [2024-04-08,2024-04-09],  // [[2024-04-08 00:00:00.000, 2024-04-09 00:00:00.000], [2024-04-08 00:00:00.000, 2024-04-09 00:00:00.000], [2024-04-08 00:00:00.000, 2024-04-09 00:00:00.000], [2024-04-08 00:00:00.000, 2024-04-09 00:00:00.000], [2024-04-08 00:00:00.000, 2024-04-09 00:00:00.000]]
+                                            //[[2, 62], [2, 21], [2, 8], [2, 6], [2, 6]]
+                                            yData: [2,62],  // Valeurs fixes pour l'axe Y
                                             settings: LineChartBarData(
                                               color: FlutterFlowTheme.of(context).primary,
                                             ),
                                           ),
-                                            // Ajoutez d'autres FFLineChartData si nécessaire
                                         ],
                                         chartStylingInfo: ChartStylingInfo(
                                           backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
@@ -608,39 +687,7 @@ class _DashboardWidgetState extends State<DashboardWidget>
                                           ),
                                         ),
                                       ),
-                                      Align(
-                                        alignment: AlignmentDirectional(0.6, 0.5),
-                                        child: FlutterFlowChartLegendWidget(
-                                          entries: [
-                                            LegendEntry(
-                                                FlutterFlowTheme.of(context)
-                                                    .primary,
-                                                'Joconde'),
-                                            LegendEntry(Color(0xFF6F28CB),
-                                                'Victoire de Samothrace'),
-                                            LegendEntry(Color(0xFF2536A4),
-                                                'Vénus de Milo'),
-                                          ],
-                                          width: 100,
-                                          height: 50,
-                                          textStyle:
-                                          FlutterFlowTheme.of(context)
-                                              .bodyMedium
-                                              .override(
-                                            fontFamily: 'Poppins',
-                                            letterSpacing: 0,
-                                          ),
-                                          textPadding:
-                                          EdgeInsetsDirectional.fromSTEB(
-                                              5, 0, 0, 0),
-                                          padding:
-                                          EdgeInsetsDirectional.fromSTEB(
-                                              5, 0, 5, 0),
-                                          borderWidth: 1,
-                                          borderColor: Colors.black,
-                                          indicatorSize: 10,
-                                        ),
-                                      ),
+
                                     ],
                                   ),
                                 ),

@@ -5,7 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="69018c71-8820-488c-a6ec-3bbad7369d75" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.dart_tool/package_config.json" beforeDir="false" afterPath="$PROJECT_DIR$/.dart_tool/package_config.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.flutter-plugins-dependencies" beforeDir="false" afterPath="$PROJECT_DIR$/.flutter-plugins-dependencies" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/cbff2b1535276d602df97b9656722b6e.cache.dill.track.dill" beforeDir="false" afterPath="$PROJECT_DIR$/build/cbff2b1535276d602df97b9656722b6e.cache.dill.track.dill" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/dashboard/dashboard_widget.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/dashboard/dashboard_widget.dart" afterDir="false" />
     </list>
