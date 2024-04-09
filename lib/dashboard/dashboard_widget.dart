@@ -462,6 +462,17 @@ class _DashboardWidgetState extends State<DashboardWidget>
     print(SecondPieDataLouvres);
     print(SecondPieDataGuimet);
 
+    void updateSelectedDataMap(List<Map<String, dynamic>> data, Map<String, double> selectedDataMap) {
+      for (var dataPoint in data) {
+        var type = dataPoint['type'];
+        var percentage = dataPoint['pourcentage']! / 2;
+        if (selectedDataMap.containsKey(type)) {
+          selectedDataMap[type] = selectedDataMap[type]! + percentage;
+        } else {
+          selectedDataMap[type] = percentage;
+        }
+      }
+    }
     if (_model.dropDownValue == 'musée du Louvre') {
       sumOfViews = VueDataLouvres.map<int>((item) => item['nombresdevue'] as int).reduce((value, element) => value + element);
       selectedData1 = historiqueDataLouvres;
@@ -482,66 +493,27 @@ class _DashboardWidgetState extends State<DashboardWidget>
               value, element) => value + element) +
               VueDataLouvres.map<int>((item) => item['nombresdevue'] as int)
                   .reduce((value, element) => value + element);
+
       Map<String, double> selectedDataMap1 = {};
       Map<String, double> selectedDataMap2 = {};
-      // Iterate through data1
-      for (var data in FirstPieDataLouvres) {
-        if (selectedDataMap1.containsKey(data['type'])) {
-          // If type already exists in the map, update the percentage
-          selectedDataMap1[data['type']] =
-              selectedDataMap1[data['type']]! + data['pourcentage']! / 2;
-        } else {
-          // Otherwise, add the type to the map
-          selectedDataMap1[data['type']] = data['pourcentage']! / 2;
-        }
-      }
+      // Update selectedDataMap1 and selectedDataMap2
+      updateSelectedDataMap(FirstPieDataLouvres, selectedDataMap1);
+      updateSelectedDataMap(FirstPieDataGuimet, selectedDataMap1);
+      updateSelectedDataMap(SecondPieDataLouvres, selectedDataMap2);
+      updateSelectedDataMap(SecondPieDataGuimet, selectedDataMap2);
 
-      // Iterate through data2
-      for (var data in FirstPieDataGuimet) {
-        if (selectedDataMap1.containsKey(data['type'])) {
-          // If type already exists in the map, update the percentage
-          selectedDataMap1[data['type']] =
-              selectedDataMap1[data['type']]! + data['pourcentage']! / 2;
-        } else {
-          // Otherwise, add the type to the map
-          selectedDataMap1[data['type']] = data['pourcentage']! / 2;
-        }
-      }
-      for (var data in SecondPieDataLouvres) {
-        if (selectedDataMap2.containsKey(data['type'])) {
-          // If type already exists in the map, update the percentage
-          selectedDataMap2[data['type']] =
-              selectedDataMap2[data['type']]! + data['pourcentage']! / 2;
-        } else {
-          // Otherwise, add the type to the map
-          selectedDataMap2[data['type']] = data['pourcentage']! / 2;
-        }
-      }
-
-      // Iterate through data2
-      for (var data in SecondPieDataGuimet) {
-        if (selectedDataMap2.containsKey(data['type'])) {
-          // If type already exists in the map, update the percentage
-          selectedDataMap2[data['type']] =
-              selectedDataMap2[data['type']]! + data['pourcentage']! / 2;
-        } else {
-          // Otherwise, add the type to the map
-          selectedDataMap2[data['type']] = data['pourcentage']! / 2;
-        }
-      }
-
-      // Construct selectedDataPie array from the map
+      // Convert selectedDataMap1 and selectedDataMap2 to lists
       List<Map<String, dynamic>> result1 = selectedDataMap1.entries
-          .map((entry) => {'type': entry.key, 'pourcentage': entry.value})
-          .toList();
+          .map<Map<String, dynamic>>((entry) => {'type': entry.key, 'pourcentage': entry.value})
+          .toList()
+          ..sort((a, b) => a['type'].compareTo(b['type']));
 
       List<Map<String, dynamic>> result2 = selectedDataMap2.entries
-          .map((entry) => {'type': entry.key, 'pourcentage': entry.value})
-          .toList();
-      FirstPieDataSelector = result1;
-      SecondPieDataSelector = result2;
-
-
+          .map<Map<String, dynamic>>((entry) => {'type': entry.key, 'pourcentage': entry.value})
+          .toList()
+          ..sort((a, b) => a['type'].compareTo(b['type']));
+      FirstPieDataSelector = result1 ;
+      SecondPieDataSelector = result2 ;
 
     }
 
