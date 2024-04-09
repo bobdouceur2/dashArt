@@ -38,11 +38,17 @@ class _DashboardWidgetState extends State<DashboardWidget>
   List<Map<String, dynamic>> VueDataLouvres = [];
   List<Map<String, dynamic>> VueDataGuimet = [];
   List<Map<String, dynamic>> VueDataTotal = [];
-  List<Map<String, dynamic>> selectedDataPie1 = [];
-  List<Map<String, dynamic>> selectedDataPie2 = [];
-  List<Map<String, dynamic>> selectedDataPie = [];
+  List<Map<String, dynamic>> FirstPieDataLouvres = [];
+  List<Map<String, dynamic>> FirstPieDataGuimet = [];
+  List<Map<String, dynamic>> FirstPieDataSelector = [];
   List<Map<String, dynamic>> selectedData1 = [];
   List<Map<String, dynamic>> selectedData2 = [];
+  List<Map<String, dynamic>> SecondPieDataLouvres = [];
+  List<Map<String, dynamic>> SecondPieDataGuimet = [];
+  List<Map<String, dynamic>> SecondPieDataSelector = [];
+  List<Map<String, dynamic>> LineDataLouvres = [];
+  List<Map<String, dynamic>> LineDataGuimet = [];
+  List<Map<String, dynamic>> LineDataSelector = [];
   int sumOfViews = 0;
   String dropDownValueController = 'Total';
 
@@ -98,8 +104,10 @@ class _DashboardWidgetState extends State<DashboardWidget>
     fetchVueDataGuimet();
     fetchVueDataLouvres();
     fetchVueDataTotal();
-    fetchDataAndCalculatePieChartDataLouvres();
-    fetchDataAndCalculatePieChartDataGuimet();
+    fetchCalculateFirstPieDataLouvres();
+    fetchCalculateFirstPieDataGuimet();
+    fetchAndCountClickSecondPieLouvres();
+    fetchAndCountClickSecondPieGuimet();
 
   }
   void fetchHistoriqueDataLouvres() async {
@@ -243,7 +251,7 @@ class _DashboardWidgetState extends State<DashboardWidget>
   }
 
 
-  void fetchDataAndCalculatePieChartDataLouvres() async {
+  void fetchCalculateFirstPieDataLouvres() async {
     setState(() {
       _isLoading = true; // Show loading indicator
     });
@@ -266,7 +274,7 @@ class _DashboardWidgetState extends State<DashboardWidget>
 
         setState(() {
           _isLoading = false; // Hide loading indicator
-          selectedDataPie1 = result;
+          FirstPieDataLouvres = result;
         });
       } else {
         print('Failed to fetch image links');
@@ -280,7 +288,7 @@ class _DashboardWidgetState extends State<DashboardWidget>
   }
 
 
-  void fetchDataAndCalculatePieChartDataGuimet() async {
+  void fetchCalculateFirstPieDataGuimet() async {
     setState(() {
       _isLoading = true; // Show loading indicator
     });
@@ -303,7 +311,7 @@ class _DashboardWidgetState extends State<DashboardWidget>
 
         setState(() {
           _isLoading = false; // Hide loading indicator
-          selectedDataPie2 = result;
+          FirstPieDataGuimet = result;
         });
       } else {
         print('Failed to fetch image links');
@@ -315,6 +323,111 @@ class _DashboardWidgetState extends State<DashboardWidget>
       });
     }
   }
+
+
+  void fetchAndCountClickSecondPieGuimet() async {
+    setState(() {
+      _isLoading = true; // Show loading indicator
+    });
+    try {
+      // Fetch data from the first endpoint
+      final clickCounterResponse = await http.get(
+          Uri.parse('http://localhost:3000/click-counter-guimet'));
+      final clickCounterData = json.decode(clickCounterResponse.body) as List<
+          dynamic>;
+
+      // Fetch data from the second endpoint
+      final imageLinksResponse = await http.get(
+          Uri.parse('http://localhost:3000/image-links-guimet'));
+      final imageLinksData = json.decode(imageLinksResponse.body) as List<
+          dynamic>;
+
+      // Count the number of timestamps by type
+      final Map<String, int> typeCounts = {};
+      for (var artwork in clickCounterData) {
+        final String artworkTitle = artwork['oeuvres'] as String;
+        final int artworkViews = artwork['nombresdevue'] as int;
+        final String? artworkType = imageLinksData
+            .firstWhere((element) => element['titre'] == artworkTitle,
+            orElse: () => {})['type'] as String?;
+        if (artworkType != null) {
+          typeCounts[artworkType] =
+              (typeCounts[artworkType] ?? 0) + artworkViews;
+        }
+      }
+      int totalViews = typeCounts.values.fold(0, (previousValue, element) => previousValue + element);
+      List<Map<String, dynamic>> result = typeCounts.entries.map((entry) {
+        return {
+          'type': entry.key,
+          'pourcentage': (entry.value / totalViews) * 100, // Calculate percentage
+        };
+      }).toList();
+
+      setState(() {
+        _isLoading = false; // Hide loading indicator
+        SecondPieDataGuimet = result;
+      });
+    } catch (e) {
+      print('Error fetching data: $e');
+      setState(() {
+        _isLoading = false; // Hide loading indicator on error
+      });
+    }
+  }
+
+  void fetchAndCountClickSecondPieLouvres() async {
+    setState(() {
+      _isLoading = true; // Show loading indicator
+    });
+    try {
+      // Fetch data from the first endpoint
+      final clickCounterResponse = await http.get(
+          Uri.parse('http://localhost:3000/click-counter-louvres'));
+      final clickCounterData = json.decode(clickCounterResponse.body) as List<
+          dynamic>;
+
+      // Fetch data from the second endpoint
+      final imageLinksResponse = await http.get(
+          Uri.parse('http://localhost:3000/image-links-louvres'));
+      final imageLinksData = json.decode(imageLinksResponse.body) as List<
+          dynamic>;
+
+      // Count the number of timestamps by type
+      final Map<String, int> typeCounts = {};
+      for (var artwork in clickCounterData) {
+        final String artworkTitle = artwork['oeuvres'] as String;
+        final int artworkViews = artwork['nombresdevue'] as int;
+        final String? artworkType = imageLinksData
+            .firstWhere((element) => element['titre'] == artworkTitle,
+            orElse: () => {})['type'] as String?;
+        if (artworkType != null) {
+          typeCounts[artworkType] =
+              (typeCounts[artworkType] ?? 0) + artworkViews;
+        }
+      }
+      int totalViews = typeCounts.values.fold(0, (previousValue, element) => previousValue + element);
+
+      List<Map<String, dynamic>> result = typeCounts.entries.map((entry) {
+        return {
+          'type': entry.key,
+          'pourcentage': (entry.value / totalViews) * 100, // Calculate percentage
+        };
+      }).toList();
+
+      setState(() {
+        _isLoading = false; // Hide loading indicator
+        SecondPieDataLouvres = result;
+      });
+    } catch (e) {
+      print('Error fetching data: $e');
+      setState(() {
+        _isLoading = false; // Hide loading indicator on error
+      });
+    }
+  }
+
+
+
 
   @override
   void dispose() {
@@ -344,51 +457,93 @@ class _DashboardWidgetState extends State<DashboardWidget>
       const Color(0xFF2536A4),
       const Color(0xFF4A57C1)
     ];
+    print(FirstPieDataLouvres);
+    print(FirstPieDataGuimet);
+    print(SecondPieDataLouvres);
+    print(SecondPieDataGuimet);
+
     if (_model.dropDownValue == 'musée du Louvre') {
       sumOfViews = VueDataLouvres.map<int>((item) => item['nombresdevue'] as int).reduce((value, element) => value + element);
       selectedData1 = historiqueDataLouvres;
       selectedData2 = VueDataLouvres;
-      selectedDataPie = selectedDataPie1;
+      FirstPieDataSelector = FirstPieDataLouvres;
+      SecondPieDataSelector = SecondPieDataLouvres;
     } else if (_model.dropDownValue == 'musée Guimet') {
       sumOfViews = VueDataGuimet.map<int>((item) => item['nombresdevue'] as int).reduce((value, element) => value + element);
       selectedData1 = historiqueDataGuimet;
       selectedData2 = VueDataGuimet;
-      selectedDataPie = selectedDataPie2;
+      FirstPieDataSelector = FirstPieDataGuimet;
+      SecondPieDataSelector = SecondPieDataGuimet;
     } else if (_model.dropDownValue == 'Total') {
       selectedData1 = historiqueDataTotal;
       selectedData2 = VueDataTotal;
-      sumOfViews = VueDataGuimet.map<int>((item) => item['nombresdevue'] as int).reduce((value, element) => value + element) + VueDataLouvres.map<int>((item) => item['nombresdevue'] as int).reduce((value, element) => value + element);
-      Map<String, double> selectedDataMap = {};
-      // Iterate through selectedDataPie1
-      for (var data in selectedDataPie1) {
-        if (selectedDataMap.containsKey(data['type'])) {
+      sumOfViews =
+          VueDataGuimet.map<int>((item) => item['nombresdevue'] as int).reduce((
+              value, element) => value + element) +
+              VueDataLouvres.map<int>((item) => item['nombresdevue'] as int)
+                  .reduce((value, element) => value + element);
+      Map<String, double> selectedDataMap1 = {};
+      Map<String, double> selectedDataMap2 = {};
+      // Iterate through data1
+      for (var data in FirstPieDataLouvres) {
+        if (selectedDataMap1.containsKey(data['type'])) {
           // If type already exists in the map, update the percentage
-          selectedDataMap[data['type']] =
-              selectedDataMap[data['type']]! + data['pourcentage']! / 2;
+          selectedDataMap1[data['type']] =
+              selectedDataMap1[data['type']]! + data['pourcentage']! / 2;
         } else {
           // Otherwise, add the type to the map
-          selectedDataMap[data['type']] = data['pourcentage']! / 2;
+          selectedDataMap1[data['type']] = data['pourcentage']! / 2;
         }
       }
-      // Iterate through selectedDataPie2
-      for (var data in selectedDataPie2) {
-        if (selectedDataMap.containsKey(data['type'])) {
+
+      // Iterate through data2
+      for (var data in FirstPieDataGuimet) {
+        if (selectedDataMap1.containsKey(data['type'])) {
           // If type already exists in the map, update the percentage
-          selectedDataMap[data['type']] =
-              selectedDataMap[data['type']]! + data['pourcentage']! / 2;
+          selectedDataMap1[data['type']] =
+              selectedDataMap1[data['type']]! + data['pourcentage']! / 2;
         } else {
           // Otherwise, add the type to the map
-          selectedDataMap[data['type']] = data['pourcentage']! / 2;
+          selectedDataMap1[data['type']] = data['pourcentage']! / 2;
+        }
+      }
+      for (var data in SecondPieDataLouvres) {
+        if (selectedDataMap2.containsKey(data['type'])) {
+          // If type already exists in the map, update the percentage
+          selectedDataMap2[data['type']] =
+              selectedDataMap2[data['type']]! + data['pourcentage']! / 2;
+        } else {
+          // Otherwise, add the type to the map
+          selectedDataMap2[data['type']] = data['pourcentage']! / 2;
+        }
+      }
+
+      // Iterate through data2
+      for (var data in SecondPieDataGuimet) {
+        if (selectedDataMap2.containsKey(data['type'])) {
+          // If type already exists in the map, update the percentage
+          selectedDataMap2[data['type']] =
+              selectedDataMap2[data['type']]! + data['pourcentage']! / 2;
+        } else {
+          // Otherwise, add the type to the map
+          selectedDataMap2[data['type']] = data['pourcentage']! / 2;
         }
       }
 
       // Construct selectedDataPie array from the map
-      List<Map<String, dynamic>> selectedDataPie3 = selectedDataMap.entries
+      List<Map<String, dynamic>> result1 = selectedDataMap1.entries
           .map((entry) => {'type': entry.key, 'pourcentage': entry.value})
           .toList();
-      selectedDataPie = selectedDataPie3;
-    }
 
+      List<Map<String, dynamic>> result2 = selectedDataMap2.entries
+          .map((entry) => {'type': entry.key, 'pourcentage': entry.value})
+          .toList();
+      FirstPieDataSelector = result1;
+      SecondPieDataSelector = result2;
+
+
+
+    }
 
 
 
@@ -807,7 +962,7 @@ class _DashboardWidgetState extends State<DashboardWidget>
                               alignment: AlignmentDirectional(1.0, -1.0),
                               child: Padding(
                                 padding: EdgeInsetsDirectional.fromSTEB(
-                                    0.0, 30.0, 45.0, 0.0),
+                                    0.0, 0.0, 45.0, 0.0),
                                 child: Container(
                                   width: 370.0,
                                   height: 400.0,
@@ -815,7 +970,7 @@ class _DashboardWidgetState extends State<DashboardWidget>
                                     children: [
                                       FlutterFlowPieChart(
                                         data: FFPieChartData(
-                                          values: selectedDataPie.map((data) => data['pourcentage'] as double).toList(),
+                                          values: FirstPieDataSelector.map((data) => data['pourcentage'] as double).toList(),
                                           colors: chartPieChartColorsList2,
                                           radius: [100.0],
                                         ),
@@ -837,47 +992,26 @@ class _DashboardWidgetState extends State<DashboardWidget>
                                       Align(
                                         alignment: AlignmentDirectional(1.0, 1.0),
                                         child: FlutterFlowChartLegendWidget(
-                                          entries: List.generate(
-                                              random_data.randomInteger(
-                                                  0, 0),
-                                                  (index) =>
-                                                  random_data.randomString(
-                                                    1,
-                                                    10,
-                                                    true,
-                                                    false,
-                                                    false,
-                                                  ))
-                                              .asMap()
-                                              .entries
-                                              .map(
-                                                (label) => LegendEntry(
-                                              chartPieChartColorsList2[label
-                                                  .key %
-                                                  chartPieChartColorsList2
-                                                      .length],
-                                              label.value,
-                                            ),
-                                          )
-                                              .toList(),
+                                          entries: FirstPieDataSelector.map((data) {
+                                            final String type = data['type'] as String;
+                                            final Color color = chartPieChartColorsList2[FirstPieDataSelector.indexOf(data) % chartPieChartColorsList2.length];
+                                            return LegendEntry(
+                                              color,
+                                              type,
+                                            );
+                                          }).toList(),
                                           width: 100,
                                           height: 50,
-                                          textStyle:
-                                          FlutterFlowTheme.of(context)
-                                              .bodyMedium
-                                              .override(
+                                          textStyle: FlutterFlowTheme.of(context).bodyMedium.override(
                                             fontFamily: 'Poppins',
                                             letterSpacing: 0,
                                           ),
-                                          textPadding:
-                                          EdgeInsetsDirectional.fromSTEB(
-                                              5, 0, 0, 0),
-                                          padding:
-                                          EdgeInsetsDirectional.fromSTEB(
-                                              5, 0, 5, 0),
+                                          textPadding: EdgeInsetsDirectional.fromSTEB(5, 0, 0, 0),
+                                          padding: EdgeInsetsDirectional.fromSTEB(5, 0, 5, 0),
                                           borderWidth: 1,
                                           borderColor: Colors.black,
                                           indicatorSize: 10,
+
                                         ),
                                       ),
                                     ],
@@ -892,27 +1026,48 @@ class _DashboardWidgetState extends State<DashboardWidget>
                                 child: Container(
                                   width: 370.0,
                                   height: 400.0,
-                                  child: FlutterFlowPieChart(
-                                    data: FFPieChartData(
-                                      // Remplacez les valeurs générées aléatoirement par des valeurs fixes
-                                      values: [10, 20, 30, 40, 50],
-                                      colors: chartPieChartColorsList2,
-                                      radius: [100.0],
-                                    ),
-                                    donutHoleRadius: 70.0,
-                                    donutHoleColor: Colors.transparent,
-                                    sectionLabelType:
-                                        PieChartSectionLabelType.percent,
-                                    sectionLabelStyle:
-                                        FlutterFlowTheme.of(context)
-                                            .headlineSmall
-                                            .override(
-                                              fontFamily: 'Poppins',
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .primaryBackground,
-                                              letterSpacing: 0.0,
-                                            ),
+                                  child: Stack(
+                                    children: [
+                                      FlutterFlowPieChart(
+                                        data: FFPieChartData(
+                                          values: SecondPieDataSelector.map((data) => data['pourcentage'] as double).toList(),
+                                          colors: chartPieChartColorsList2,
+                                          radius: [100.0],
+                                        ),
+                                        donutHoleRadius: 70.0,
+                                        donutHoleColor: Colors.transparent,
+                                        sectionLabelType: PieChartSectionLabelType.percent,
+                                        sectionLabelStyle: FlutterFlowTheme.of(context).headlineSmall.override(
+                                          fontFamily: 'Poppins',
+                                          color: FlutterFlowTheme.of(context).primaryBackground,
+                                          letterSpacing: 0.0,
+                                        ),
+                                      ),
+                                      Align(
+                                        alignment: AlignmentDirectional(1.0, 1.0),
+                                        child: FlutterFlowChartLegendWidget(
+                                          entries: SecondPieDataSelector.map((data) {
+                                            final String type = data['type'] as String;
+                                            final Color color = chartPieChartColorsList2[SecondPieDataSelector.indexOf(data) % chartPieChartColorsList2.length];
+                                            return LegendEntry(
+                                              color,
+                                              type,
+                                            );
+                                          }).toList(),
+                                          width: 100,
+                                          height: 50,
+                                          textStyle: FlutterFlowTheme.of(context).bodyMedium.override(
+                                            fontFamily: 'Poppins',
+                                            letterSpacing: 0,
+                                          ),
+                                          textPadding: EdgeInsetsDirectional.fromSTEB(5, 0, 0, 0),
+                                          padding: EdgeInsetsDirectional.fromSTEB(5, 0, 5, 0),
+                                          borderWidth: 1,
+                                          borderColor: Colors.black,
+                                          indicatorSize: 10,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
